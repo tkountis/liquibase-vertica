@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="vertica-jdk5-6.1.2-0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../EMS_DB_builder/lib/vertica-jdk5-6.1.2-0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
