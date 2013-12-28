@@ -1,9 +1,7 @@
 package liquibase.ext.vertica.database;
 
 import liquibase.CatalogAndSchema;
-import liquibase.Liquibase;
 import liquibase.database.AbstractJdbcDatabase;
-import liquibase.database.Database;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.ObjectQuotingStrategy;
 import liquibase.database.jvm.JdbcConnection;
@@ -11,17 +9,17 @@ import liquibase.exception.DatabaseException;
 import liquibase.executor.ExecutorService;
 import liquibase.ext.vertica.statement.GetProjectionDefinitionStatement;
 import liquibase.logging.LogFactory;
-import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
 import java.math.BigInteger;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.*;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -262,8 +260,20 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
 
         @Override
         protected String getConnectionSchemaName() {
-            System.out.println("return public");
-            return "public";
+            DatabaseConnection connection = getConnection();
+            if (connection == null) {
+                return null;
+            }
+            try {
+                ResultSet resultSet = ((JdbcConnection) connection).createStatement().executeQuery("SELECT CURRENT_SCHEMA");
+                resultSet.next();
+                String schema = resultSet.getString(1);
+                System.out.println("schema_name: "+schema);
+                return schema;
+            } catch (Exception e) {
+                LogFactory.getLogger().info("Error getting default schema", e);
+            }
+            return null;
         }
 
         private boolean catalogExists(String catalogName) throws DatabaseException {
@@ -284,7 +294,7 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
     public String getProjectionDefinition(CatalogAndSchema schema, String projectionName) throws DatabaseException {
         schema = correctSchema(schema);
         List<String> defLines = (List<String>) ExecutorService.getInstance().getExecutor(this).queryForList(new GetProjectionDefinitionStatement(schema.getCatalogName(), schema.getSchemaName(), projectionName), String.class);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (String defLine : defLines) {
             sb.append(defLine);
         }
