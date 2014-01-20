@@ -11,6 +11,8 @@ import liquibase.ext.vertica.statement.GetProjectionDefinitionStatement;
 import liquibase.logging.LogFactory;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
+import liquibase.structure.core.Catalog;
+import liquibase.structure.core.Schema;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 
@@ -50,7 +52,7 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
             super.sequenceNextValueFunction = "nextval('%s')";
             super.sequenceCurrentValueFunction = "currval('%s')";
             super.unmodifiableDataTypes.addAll(Arrays.asList("bool", "int4", "int8", "float4", "float8", "numeric", "bigserial", "serial", "bytea", "timestamptz"));*/
-            super.unquotedObjectsAreUppercased=true;
+            super.unquotedObjectsAreUppercased=false;
         }
 
         @Override
@@ -101,6 +103,11 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
             }
             return null;
         }
+
+    @Override
+    public boolean supportsCatalogs() {
+        return false;
+    }
 
         @Override
         public boolean supportsCatalogInObjectName(Class<? extends DatabaseObject> type) {
@@ -193,9 +200,24 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
             if (objectName.contains("-") || hasMixedCase(objectName) || startsWithNumeric(objectName) || isReservedWord(objectName)) {
                 return objectName;
             } else {
-                return objectName.toUpperCase();
+                return objectName.toLowerCase();
             }
         }
+
+    @Override
+    public CatalogAndSchema correctSchema(final CatalogAndSchema schema) {
+        if (schema == null) {
+            return new CatalogAndSchema(null, getDefaultSchemaName());
+        }
+        String schemaName = StringUtils.trimToNull(schema.getSchemaName());
+
+        if (schemaName == null) {
+            schemaName = getDefaultSchemaName();
+        }
+
+
+        return new CatalogAndSchema(null, schemaName);
+    }
 
         /*
         * Check if given string has case problems according to postgresql documentation.

@@ -1,0 +1,15 @@
+target
+.project
+.settings
+*nb-configuration.xml
+.classpath
+/.idea/workspace.xml
+/out
+/bin
+liquibase.integrationtest.local.properties
+/liquibase
+/derby.log
+/.idea
+*.iml
+.DS_Store
+liquibase.iml

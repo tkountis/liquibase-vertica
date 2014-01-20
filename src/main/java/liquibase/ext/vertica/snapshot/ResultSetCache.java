@@ -28,7 +28,7 @@ class ResultSetCache {
             String schemaKey = resultSetExtractor.wantedKeyParameters().createSchemaKey(resultSetExtractor.database);
 
             Map<String, List<CachedRow>> cache = cacheBySchema.get(schemaKey);
-            if (cache == null ) {
+             if (cache == null ) {
                 cache = new HashMap<String, List<CachedRow>>();
                 cacheBySchema.put(schemaKey, cache);
             }

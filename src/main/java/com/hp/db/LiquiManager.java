@@ -2,13 +2,20 @@ package com.hp.db;
 
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
+import liquibase.diff.output.DiffOutputControl;
+import liquibase.diff.output.changelog.ChangeGeneratorFactory;
+import liquibase.diff.output.changelog.core.MissingColumnChangeGenerator;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.ext.vertica.snapshot.ProjectionSnapshotGenerator;
+import liquibase.integration.commandline.CommandLineUtils;
 import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.snapshot.jvm.UniqueConstraintSnapshotGenerator;
+import liquibase.util.StringUtils;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,6 +34,9 @@ public class LiquiManager {
         VerticaDatabase verticaDatabase = new VerticaDatabase();
         liquibase.database.DatabaseFactory.getInstance().register(verticaDatabase);
         liquibase.snapshot.SnapshotGeneratorFactory.getInstance().unregister(UniqueConstraintSnapshotGenerator.class);
+        ChangeGeneratorFactory.getInstance().unregister(MissingColumnChangeGenerator.class);
+
+
 
 
         Properties myProp = new Properties();
@@ -48,15 +58,37 @@ public class LiquiManager {
 
 
         DatabaseConnection dc = new JdbcConnection(conn);
+        verticaDatabase.setConnection(dc);
 
         Liquibase liquibase = null;
         try {
 //            liquibase = new Liquibase("C:\\Users\\vesterma\\Documents\\Projects\\liquibase\\target\\classes\\db\\db.changelog.xml", new FileSystemResourceAccessor(),dc);
             liquibase = new Liquibase("C:\\Users\\vesterma\\Documents\\Projects\\liquibase\\target\\classes\\db\\db_change2.xml", new FileSystemResourceAccessor(),dc);
 //            liquibase.rollback(2,"");
-            liquibase.update(2,"");
+//            liquibase.update(2,"");
 //            liquibase.changeLogSync("");
 //            liquibase.generateDocumentation("c:\\temp");
+            String defaultCatalogName = "public";
+
+            String defaultSchemaName = "public";
+            String changeLogFile = "c:\\temp\\test.xml";
+            String changeSetAuthor = "jony";
+            String diffTypes = null;
+            String changeSetContext = null;;
+            String dataOutputDirectory = "c:\\temp";
+
+            boolean includeCatalog = false; //Boolean.parseBoolean(getCommandParam("includeCatalog", "false"));
+            boolean includeSchema = false; //Boolean.parseBoolean(getCommandParam("includeSchema", "false"));
+            boolean includeTablespace = false; //Boolean.parseBoolean(getCommandParam("includeTablespace", "false"));
+            DiffOutputControl diffOutputControl = new DiffOutputControl(includeCatalog, includeSchema, includeTablespace);
+
+            try {
+                CommandLineUtils.doGenerateChangeLog(changeLogFile, verticaDatabase, defaultCatalogName, defaultSchemaName, StringUtils.trimToNull(diffTypes), StringUtils.trimToNull(changeSetAuthor), StringUtils.trimToNull(changeSetContext), StringUtils.trimToNull(dataOutputDirectory), diffOutputControl);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            }
         } catch (LiquibaseException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

@@ -5,6 +5,7 @@ import liquibase.exception.DatabaseException;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.snapshot.DatabaseSnapshot;
 import liquibase.snapshot.InvalidExampleException;
+import liquibase.snapshot.SnapshotGenerator;
 import liquibase.snapshot.jvm.IndexSnapshotGenerator;
 import liquibase.structure.DatabaseObject;
 
@@ -34,4 +35,10 @@ public class IndexSnapshotGeneratorVertica extends IndexSnapshotGenerator {
         System.out.println("in index addTo");
         return null;
     }
+
+    //@Override
+    Class<? extends SnapshotGenerator>[] replaces(){
+        return new Class[]{IndexSnapshotGenerator.class};
+    }
+
 }

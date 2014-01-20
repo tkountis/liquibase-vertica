@@ -17,6 +17,7 @@ import liquibase.structure.core.View;
 import liquibase.util.StringUtils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +41,8 @@ public class ProjectionSnapshotGenerator extends JdbcSnapshotGenerator {
     }
 
     public ProjectionSnapshotGenerator(){
-        super(Projection.class, new Class[]{Table.class});
+//        super(Projection.class, new Class[]{Table.class});
+        super(Projection.class, new Class[]{Schema.class});
     }
 
     @Override
@@ -51,10 +53,11 @@ public class ProjectionSnapshotGenerator extends JdbcSnapshotGenerator {
 
         List<CachedRow> projectionMetadataRs = null;
         try {
-            projectionMetadataRs = ((JdbcDatabaseSnapshot) snapshot).getMetaData().getTables(((AbstractJdbcDatabase) database).getJdbcCatalogName(schema), ((AbstractJdbcDatabase) database).getJdbcSchemaName(schema), example.getName(), new String[]{"VIEW"});
+            VerticaDatabaseSnapshot verticaDatabaseSnapshot = new VerticaDatabaseSnapshot(new DatabaseObject[0],snapshot.getDatabase(),snapshot.getSnapshotControl());
+//            projectionMetadataRs = ((JdbcDatabaseSnapshot) snapshot).getMetaData().getTables(((AbstractJdbcDatabase) database).getJdbcCatalogName(schema), ((AbstractJdbcDatabase) database).getJdbcSchemaName(schema), example.getName(), new String[]{"VIEW"});
+            projectionMetadataRs = (verticaDatabaseSnapshot).getMetaData().getProjectionDefinition(schema.getName(),example.getName());
             if (projectionMetadataRs.size() > 0) {
                 CachedRow row = projectionMetadataRs.get(0);
-                String rawTableName = row.getString("TABLE_NAME");
                 String rawSchemaName = StringUtils.trimToNull(row.getString("TABLE_SCHEM"));
                 String rawProjectionName = row.getString("PROJ_NAME");
 
@@ -64,11 +67,11 @@ public class ProjectionSnapshotGenerator extends JdbcSnapshotGenerator {
                 CatalogAndSchema schemaFromJdbcInfo = ((AbstractJdbcDatabase) database).getSchemaFromJdbcInfo("", rawSchemaName);
                 projection.setSchema(new Schema(schemaFromJdbcInfo.getCatalogName(), schemaFromJdbcInfo.getSchemaName()));
 
-                try {
+          /*      try {
                     projection.setDefinition(database.getProjectionDefinition(schemaFromJdbcInfo, projection.getName()));
                 } catch (DatabaseException e) {
                     throw new DatabaseException("Error getting " + database.getConnection().getURL() + " projection with " + new GetProjectionDefinitionStatement(projection.getSchema().getCatalogName(), projection.getSchema().getName(), rawProjectionName), e);
-                }
+                }*/
 
                 return projection;
             } else {
@@ -86,25 +89,36 @@ public class ProjectionSnapshotGenerator extends JdbcSnapshotGenerator {
             return;
         }
 
-        if (foundObject instanceof Table) {
-            Table table = (Table) foundObject;
+        if (foundObject instanceof Schema) {
+//        if (foundObject instanceof Table) {
+//            Table table = (Table) foundObject;
             Database database = snapshot.getDatabase();
-            Schema schema;
-            schema = table.getSchema();
+            Schema schema = (Schema) foundObject;
+//            Schema schema;
+//            schema = table.getSchema();
+
+//            table.setAttribute("projections",new ArrayList<Projection>());
 
             List<CachedRow> metadata = null;
             try {
                 VerticaDatabaseSnapshot verticaDatabaseSnapshot = new VerticaDatabaseSnapshot(new DatabaseObject[0],snapshot.getDatabase(),snapshot.getSnapshotControl());
-                metadata = (verticaDatabaseSnapshot.getMetaData().getProjectionDefinition(schema.getName(), table.getName()));
+                metadata = (verticaDatabaseSnapshot.getMetaData().getProjectionDefinition(schema.getName(),null)); //, table.getName()));
+
+                for (CachedRow projection : metadata) {
+                    Projection pr = new Projection();
+                    pr.setName(cleanNameFromDatabase((String) projection.get("PROJ_NAME"), database));
+                    pr.setSchema(schema);
+//                schema.addDatabaseObject(pr);
+//                table.getAttribute("projections", List.class).add(pr);
+                    schema.addDatabaseObject(pr);
+
+                }
+
             } catch (SQLException e) {
                 throw new DatabaseException(e);
             }
 
-            for (CachedRow constraint : metadata) {
-                Projection pr = new Projection();
-                pr.setName(cleanNameFromDatabase((String) constraint.get("PROJECTION_NAME"), database));
 
-            }
         }
     }
 }

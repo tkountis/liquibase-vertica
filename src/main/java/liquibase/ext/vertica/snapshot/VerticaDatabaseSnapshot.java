@@ -64,17 +64,19 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
             this.database = database;
         }
 
-        public List<CachedRow> getProjectionDefinition(final String schemaName, final String tableName) throws SQLException, DatabaseException {
+        public List<CachedRow> getProjectionDefinition(final String schemaName, final String projection) throws SQLException, DatabaseException { //, final String tableName)
             return projectionsResultCache.get(new ResultSetCache.SingleResultSetExtractor(database) {
 
                 @Override
                 public ResultSetCache.RowData rowKeyParameters(CachedRow row) {
-                    return new ResultSetCache.RowData("", row.getString("TABLE_SCHEM"), database, row.getString("TABLE_NAME"), row.getString("PROJ_NAME"));
+                    return new ResultSetCache.RowData(null, row.getString("TABLE_SCHEM"), database, row.getString("PROJ_NAME"));
+//                    return new ResultSetCache.RowData(null, row.getString("TABLE_SCHEM"), database, row.getString("TABLE_NAME"), row.getString("PROJ_NAME"));
                 }
 
                 @Override
                 public ResultSetCache.RowData wantedKeyParameters() {
-                    return new ResultSetCache.RowData("", schemaName, database, tableName);
+//                    return new ResultSetCache.RowData(null, schemaName, database, tableName,null);
+                    return new ResultSetCache.RowData(null, schemaName, database, projection);
                 }
 
                 @Override
@@ -85,7 +87,8 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
                         resultSetCache.putInfo("seenProjections", seenProjections);
                     }
 
-                    seenProjections.add(schemaName + ":" + tableName);
+//                    seenProjections.add(schemaName + ":" + tableName);
+                    seenProjections.add(schemaName);
                     return seenProjections.size() > 2;
                 }
 
@@ -112,16 +115,83 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
                             "FROM V_CATALOG.PROJECTIONS " +
                             "WHERE PROJECTION_SCHEMA ='" + ((AbstractJdbcDatabase) database).getJdbcSchemaName(catalogAndSchema) + "'";
 
-                    if (!bulk) {
-                        if (tableName != null) {
-                            sql += " AND ANCHOR_TABLE_NAME='" + database.escapeObjectName(tableName, Table.class) + "'";
-                        }
-                    }
+//                    if (!bulk) {
+//                        if (tableName != null) {
+//                            sql += " AND ANCHOR_TABLE_NAME='" + database.escapeObjectName(tableName, Table.class) + "'";
+//                        }
+//                    }
                     Statement statement = ((JdbcConnection) database.getConnection()).createStatement();
                     return statement.executeQuery(sql);
 //                return this.executeQuery(sql, database);
                 }
             });
     }
+
+        public List<CachedRow> getProjectionColumns(final String schemaName, final String projection, final String columnName) throws SQLException, DatabaseException { //, final String tableName)
+            return projectionsResultCache.get(new ResultSetCache.SingleResultSetExtractor(database) {
+
+                @Override
+                public ResultSetCache.RowData rowKeyParameters(CachedRow row) {
+                    return new ResultSetCache.RowData(null, row.getString("TABLE_SCHEM"), database, row.getString("PROJ_NAME"), row.getString("COLUMN_NAME"));
+//                    return new ResultSetCache.RowData(null, row.getString("TABLE_SCHEM"), database, row.getString("TABLE_NAME"), row.getString("PROJ_NAME"));
+                }
+
+                @Override
+                public ResultSetCache.RowData wantedKeyParameters() {
+                    return new ResultSetCache.RowData(null, schemaName, database, projection, columnName);
+                }
+
+                @Override
+                boolean shouldBulkSelect(ResultSetCache resultSetCache) {
+                    Set<String> seenProjections = resultSetCache.getInfo("seenProjections", Set.class);
+                    if (seenProjections == null) {
+                        seenProjections = new HashSet<String>();
+                        resultSetCache.putInfo("seenProjections", seenProjections);
+                    }
+
+                    seenProjections.add(schemaName + ":" + projection);
+//                    seenProjections.add(schemaName);
+                    return seenProjections.size() > 2;
+                }
+
+                @Override
+                public ResultSet fastFetchQuery() throws SQLException, DatabaseException {
+                    if (database instanceof VerticaDatabase) {
+                        return verticaQuery(false);
+                    }
+                    return null;
+                }
+
+                @Override
+                public ResultSet bulkFetchQuery() throws SQLException, DatabaseException {
+                    if (database instanceof VerticaDatabase) {
+                        return verticaQuery(true);
+                    }
+                    return null;
+                }
+
+                protected ResultSet verticaQuery(boolean bulk) throws DatabaseException, SQLException {
+                    CatalogAndSchema catalogAndSchema = database.correctSchema(new CatalogAndSchema("", schemaName));
+
+                    String sql = "select p.projection_schema AS TABLE_SCHEM,pc.projection_name AS PROJ_NAME,pc.projection_column_name AS COLUMN_NAME, " +
+                            "c.data_type AS TYPE_NAME, c.DATA_TYPE_ID AS DATA_TYPE,pc.encoding_type, c.is_nullable AS NULLABLE, IS_IDENTITY AS IS_AUTOINCREMENT," +
+                            "pc.ENCODING_TYPE AS ENCODING " +
+                            "from projection_columns pc " +
+                            "join projections p on (p.projection_id = pc.projection_id) " +
+                            "join columns     c on (pc.table_column_id = c.column_id) " +
+                            "WHERE p.PROJECTION_SCHEMA ='" + ((AbstractJdbcDatabase) database).getJdbcSchemaName(catalogAndSchema) + "'";
+
+//                    if (!bulk) {
+//                        if (tableName != null) {
+//                            sql += " AND ANCHOR_TABLE_NAME='" + database.escapeObjectName(tableName, Table.class) + "'";
+//                        }
+//                    }
+                    Statement statement = ((JdbcConnection) database.getConnection()).createStatement();
+                    return statement.executeQuery(sql);
+//                return this.executeQuery(sql, database);
+                }
+            });
+        }
     }
 }
+

@@ -42,6 +42,7 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
     private String subquery;
 
     private List<ColumnConfigVertica> columns;
+    private String remarks;
 
 
     public String getColumnAliases() {
@@ -206,5 +207,9 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
 
     public List<GroupedColumns> getGroupedColumns() {
         return groupedColumns;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }
