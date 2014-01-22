@@ -2,13 +2,12 @@ package com.hp.db;
 
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
+import liquibase.database.jvm.JdbcConnection;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGeneratorFactory;
 import liquibase.diff.output.changelog.core.MissingColumnChangeGenerator;
-import liquibase.ext.vertica.database.VerticaDatabase;
-import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
-import liquibase.ext.vertica.snapshot.ProjectionSnapshotGenerator;
+import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.integration.commandline.CommandLineUtils;
 import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.snapshot.jvm.UniqueConstraintSnapshotGenerator;

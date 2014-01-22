@@ -1,11 +1,8 @@
 package liquibase.ext.vertica.diff.output.changelog;
 
 import liquibase.change.Change;
-import liquibase.change.ColumnConfig;
 import liquibase.change.ConstraintsConfig;
-import liquibase.change.core.CreateTableChange;
 import liquibase.database.Database;
-import liquibase.database.core.MySQLDatabase;
 import liquibase.datatype.DataTypeFactory;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.changelog.ChangeGeneratorChain;
@@ -18,7 +15,6 @@ import liquibase.ext.vertica.structure.Projection;
 import liquibase.statement.DatabaseFunction;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Column;
-import liquibase.structure.core.PrimaryKey;
 import liquibase.structure.core.Table;
 
 import java.util.Date;

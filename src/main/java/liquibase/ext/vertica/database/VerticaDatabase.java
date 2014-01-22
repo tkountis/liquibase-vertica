@@ -11,8 +11,6 @@ import liquibase.ext.vertica.statement.GetProjectionDefinitionStatement;
 import liquibase.logging.LogFactory;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
-import liquibase.structure.core.Catalog;
-import liquibase.structure.core.Schema;
 import liquibase.structure.core.Table;
 import liquibase.util.StringUtils;
 

@@ -1,13 +1,17 @@
 package liquibase.ext.vertica.statement;
 
-import liquibase.change.ColumnConfig;
 import liquibase.datatype.LiquibaseDataType;
 import liquibase.ext.vertica.change.ColumnConfigVertica;
 import liquibase.ext.vertica.structure.GroupedColumns;
 import liquibase.ext.vertica.structure.Segmentation;
-import liquibase.statement.*;
+import liquibase.statement.AbstractSqlStatement;
+import liquibase.statement.AutoIncrementConstraint;
+import liquibase.statement.ColumnConstraint;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

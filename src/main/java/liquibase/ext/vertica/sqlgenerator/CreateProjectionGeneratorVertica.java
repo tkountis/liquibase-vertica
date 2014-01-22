@@ -1,12 +1,8 @@
 package liquibase.ext.vertica.sqlgenerator;
 
-import liquibase.change.Change;
-import liquibase.change.ColumnConfig;
-import liquibase.change.core.DropTableChange;
 import liquibase.database.Database;
 import liquibase.exception.ValidationErrors;
 import liquibase.ext.vertica.change.ColumnConfigVertica;
-import liquibase.ext.vertica.change.DropProjectionChange;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.ext.vertica.statement.CreateProjectionStatement;
 import liquibase.ext.vertica.structure.GroupedColumns;
@@ -15,10 +11,6 @@ import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.sqlgenerator.core.AbstractSqlGenerator;
-import liquibase.statement.core.CreateTableStatement;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

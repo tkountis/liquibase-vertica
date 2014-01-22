@@ -1,11 +1,11 @@
 package liquibase.ext.vertica.sqlgenerator;
 
 import liquibase.database.Database;
-import liquibase.database.core.*;
+import liquibase.database.core.MSSQLDatabase;
+import liquibase.database.core.PostgresDatabase;
 import liquibase.datatype.DatabaseDataType;
 import liquibase.exception.ValidationErrors;
 import liquibase.ext.vertica.database.VerticaDatabase;
-import liquibase.ext.vertica.statement.CreateProjectionStatement;
 import liquibase.ext.vertica.statement.CreateTableStatementVertica;
 import liquibase.ext.vertica.structure.Segmentation;
 import liquibase.logging.LogFactory;
@@ -13,11 +13,7 @@ import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.sqlgenerator.core.AbstractSqlGenerator;
-import liquibase.sqlgenerator.core.CreateTableGenerator;
 import liquibase.statement.AutoIncrementConstraint;
-import liquibase.statement.core.CreateTableStatement;
-import liquibase.structure.core.Sequence;
-import liquibase.util.StringUtils;
 
 import java.util.Iterator;
 import java.util.LinkedList;

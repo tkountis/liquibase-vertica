@@ -3,12 +3,10 @@ package liquibase.ext.vertica.change;
 import liquibase.change.AbstractChange;
 import liquibase.change.ChangeMetaData;
 import liquibase.change.DatabaseChange;
-import liquibase.change.DatabaseChangeProperty;
 import liquibase.database.Database;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.ext.vertica.statement.DropProjectionStatement;
 import liquibase.statement.SqlStatement;
-import liquibase.statement.core.DropTableStatement;
 
 /**
  * Created with IntelliJ IDEA.

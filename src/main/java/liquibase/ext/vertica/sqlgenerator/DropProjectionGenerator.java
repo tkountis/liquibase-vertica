@@ -1,22 +1,15 @@
 package liquibase.ext.vertica.sqlgenerator;
 
 import liquibase.database.Database;
-import liquibase.database.core.OracleDatabase;
 import liquibase.exception.ValidationErrors;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.ext.vertica.statement.DropProjectionStatement;
-import liquibase.logging.LogFactory;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.sqlgenerator.core.AbstractSqlGenerator;
-import liquibase.statement.core.CreateTableStatement;
-import liquibase.statement.core.DropTableStatement;
 import liquibase.structure.core.Relation;
 import liquibase.structure.core.Table;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

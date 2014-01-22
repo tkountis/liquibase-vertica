@@ -1,7 +1,6 @@
 package liquibase.ext.vertica.change;
 
 import liquibase.change.*;
-import liquibase.change.core.CreateTableChange;
 import liquibase.change.core.DropTableChange;
 import liquibase.database.Database;
 import liquibase.datatype.DataTypeFactory;
@@ -10,11 +9,9 @@ import liquibase.exception.UnexpectedLiquibaseException;
 import liquibase.exception.ValidationErrors;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.ext.vertica.statement.CreateTableStatementVertica;
-import liquibase.ext.vertica.structure.GroupedColumns;
 import liquibase.ext.vertica.structure.Segmentation;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.*;
-import liquibase.statement.core.CreateTableStatement;
 import liquibase.statement.core.SetColumnRemarksStatement;
 import liquibase.statement.core.SetTableRemarksStatement;
 import liquibase.util.StringUtils;
