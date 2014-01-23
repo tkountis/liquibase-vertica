@@ -36,7 +36,8 @@ import java.util.Scanner;
 public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //extends ColumnSnapshotGenerator  {
 
     public ColumnVerticaSnapshotGenerator() {
-        super(ColumnVertica.class, new Class[]{ Projection.class}); //todo: add: Table.class, once the replace functionality works
+//        super(Column.class, new Class[]{Table.class, View.class});
+        super(ColumnVertica.class, new Class[]{ Table.class,Projection.class}); //todo: add: Table.class, once the replace functionality works
 
     }
 
@@ -56,13 +57,15 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
 
         List<CachedRow> columnMetadataRs = null;
         try {
-
-//            JdbcDatabaseSnapshot.CachingDatabaseMetaData databaseMetaData = ((JdbcDatabaseSnapshot) snapshot).getMetaData();
-            VerticaDatabaseSnapshot verticaDatabaseSnapshot = new VerticaDatabaseSnapshot(new DatabaseObject[0],snapshot.getDatabase(),snapshot.getSnapshotControl());
-
-//            columnMetadataRs = databaseMetaData.getColumns(((AbstractJdbcDatabase) database).getJdbcCatalogName(schema), ((AbstractJdbcDatabase) database).getJdbcSchemaName(schema), relation.getName(), example.getName());
-            columnMetadataRs = (verticaDatabaseSnapshot.getMetaData().getProjectionColumns(schema.getName(), relation.getName(), example.getName())); //, table.getName()));
-
+            if (relation instanceof Projection) {
+    //            JdbcDatabaseSnapshot.CachingDatabaseMetaData databaseMetaData = ((JdbcDatabaseSnapshot) snapshot).getMetaData();
+                VerticaDatabaseSnapshot verticaDatabaseSnapshot = new VerticaDatabaseSnapshot(new DatabaseObject[0],snapshot.getDatabase(),snapshot.getSnapshotControl());
+    //            columnMetadataRs = databaseMetaData.getColumns(((AbstractJdbcDatabase) database).getJdbcCatalogName(schema), ((AbstractJdbcDatabase) database).getJdbcSchemaName(schema), relation.getName(), example.getName());
+                columnMetadataRs = (verticaDatabaseSnapshot.getMetaData().getProjectionColumns(schema.getName(), relation.getName(), example.getName())); //, table.getName()));
+            }/*else{
+                JdbcDatabaseSnapshot.CachingDatabaseMetaData databaseMetaData = ((JdbcDatabaseSnapshot) snapshot).getMetaData();
+                columnMetadataRs = databaseMetaData.getColumns(((AbstractJdbcDatabase) database).getJdbcCatalogName(schema), ((AbstractJdbcDatabase) database).getJdbcSchemaName(schema), relation.getName(), example.getName());
+            }*/
             if (columnMetadataRs.size() > 0) {
                 CachedRow data = columnMetadataRs.get(0);
                 return readColumn(data, relation, database);
@@ -72,6 +75,7 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
         } catch (Exception e) {
             throw new DatabaseException(e);
         }
+
     }
 
     @Override
@@ -104,7 +108,33 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
             } catch (Exception e) {
                 throw new DatabaseException(e);
             }
-        }
+        } /*else if (foundObject instanceof Table) {
+            System.out.println("in vert col addTo, found: " + foundObject.getName());
+            Database database = snapshot.getDatabase();
+            Table relation = (Table) foundObject;
+            List<CachedRow> allColumnsMetadataRs = null;
+            try {
+
+//                VerticaDatabaseSnapshot verticaDatabaseSnapshot = new VerticaDatabaseSnapshot(new DatabaseObject[0],snapshot.getDatabase(),snapshot.getSnapshotControl());
+                JdbcDatabaseSnapshot.CachingDatabaseMetaData databaseMetaData = ((JdbcDatabaseSnapshot) snapshot).getMetaData();
+
+                Schema schema;
+                schema = relation.getSchema();
+//                allColumnsMetadataRs = (verticaDatabaseSnapshot.getMetaData().getProjectionColumns(schema.getName(), relation.getName(), null)); //, table.getName()));
+
+                allColumnsMetadataRs = databaseMetaData.getColumns(((AbstractJdbcDatabase) database).getJdbcCatalogName(schema), ((AbstractJdbcDatabase) database).getJdbcSchemaName(schema), relation.getName(), null);
+
+
+                for (CachedRow row : allColumnsMetadataRs) {
+                    ColumnVertica exampleColumn = new ColumnVertica();
+                    exampleColumn.setRelation(relation).setName(row.getString("COLUMN_NAME"));
+                    relation.getColumns().add(exampleColumn);
+                }
+
+            } catch (Exception e) {
+                throw new DatabaseException(e);
+            }
+        }*/
 
     }
 
@@ -114,7 +144,12 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
     * code taken from ColumnSnapshotGenerator - it removed exess code and added vertica specifics
     **/
     protected ColumnVertica readColumn(CachedRow columnMetadataResultSet, Relation table, Database database) throws SQLException, DatabaseException {
-        String rawProjectionName = (String) columnMetadataResultSet.get("PROJ_NAME");
+        String rawProjectionName = null;
+        if (table instanceof Projection){
+            rawProjectionName = (String) columnMetadataResultSet.get("PROJ_NAME");
+        }else{
+            rawProjectionName =(String) columnMetadataResultSet.get("TABLE_NAME");
+        }
         String rawColumnName = (String) columnMetadataResultSet.get("COLUMN_NAME");
         String rawSchemaName = StringUtils.trimToNull((String) columnMetadataResultSet.get("TABLE_SCHEM"));
         String rawCatalogName = StringUtils.trimToNull((String) columnMetadataResultSet.get("TABLE_CAT"));

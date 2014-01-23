@@ -103,6 +103,7 @@ public class ProjectionSnapshotGenerator extends JdbcSnapshotGenerator {
                     Projection pr = new Projection();
                     pr.setName(cleanNameFromDatabase((String) projection.get("PROJ_NAME"), database));
                     pr.setSchema(schema);
+                    pr.setSubquery("Select * from " + (String) projection.get("TABLE_NAME"));
 //                schema.addDatabaseObject(pr);
 //                table.getAttribute("projections", List.class).add(pr);
                     schema.addDatabaseObject(pr);

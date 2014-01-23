@@ -233,6 +233,12 @@
         <xsd:attribute name="unsegmented" type="xsd:boolean"/>
     </xsd:attributeGroup>
 
+    <xsd:element name="constraints">
+        <xsd:complexType>
+            <xsd:attributeGroup ref="constraintsAttributes" />
+        </xsd:complexType>
+    </xsd:element>
+
     <xsd:element name="columnv">
         <xsd:complexType mixed="true">
             <xsd:sequence>

@@ -12,7 +12,7 @@
             <vert:segmentation unsegmented="true" allNodes="true"/>
         </vert:createTable>
         <vert:addVerticaColumn tableName="liquitest">
-            <vert:columnv name="tttt" type="VARCHAR(24)" encoding="RLE"/>
+            <vert:columnv name="tttt" type="VARCHAR(24)" encoding="RLE" />
         </vert:addVerticaColumn>
 
         <vert:createProjection schemaName="public" projectionName="liquitest_encoding_proj" subquery="select * from liquitest" orderby="str" ksafe="0">

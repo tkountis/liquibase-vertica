@@ -19,6 +19,15 @@ public class Projection extends Relation {
         this.setAttribute("definition", definition);
     }
 
+    public String getSubquery() {
+        return getAttribute("subquery", String.class);
+    }
+
+    public void setSubquery(String subquery) {
+        this.setAttribute("subquery", subquery);
+    }
+
+
 
 
 }
