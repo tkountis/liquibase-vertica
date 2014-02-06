@@ -293,6 +293,24 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
             return null;
         }
 
+        public String executeSQL(String query) {
+        DatabaseConnection connection = getConnection();
+        if (connection == null) {
+            return null;
+        }
+            StringBuilder  res = new StringBuilder();
+        try {
+            ResultSet resultSet = ((JdbcConnection) connection).createStatement().executeQuery(query);
+            while (resultSet.next()){
+                res.append(resultSet.getString(1));
+        }
+            return res.toString();
+        } catch (Exception e) {
+            LogFactory.getLogger().info("Error getting default schema", e);
+        }
+        return null;
+    }
+
         private boolean catalogExists(String catalogName) throws DatabaseException {
             return catalogName != null && runExistsQuery(
                     "select count(*) from information_schema.schemata where catalog_name='" + catalogName + "'");

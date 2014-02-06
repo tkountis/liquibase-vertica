@@ -6,6 +6,7 @@ import liquibase.database.Database;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.ext.vertica.database.VerticaDatabase;
+import liquibase.ext.vertica.structure.Projection;
 import liquibase.snapshot.CachedRow;
 import liquibase.snapshot.InvalidExampleException;
 import liquibase.snapshot.JdbcDatabaseSnapshot;
@@ -115,11 +116,11 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
                             "FROM V_CATALOG.PROJECTIONS " +
                             "WHERE PROJECTION_SCHEMA ='" + ((AbstractJdbcDatabase) database).getJdbcSchemaName(catalogAndSchema) + "'";
 
-//                    if (!bulk) {
-//                        if (tableName != null) {
-//                            sql += " AND ANCHOR_TABLE_NAME='" + database.escapeObjectName(tableName, Table.class) + "'";
-//                        }
-//                    }
+                    if (!bulk) {
+                        if (projection != null) {
+                            sql += " AND PROJECTION_NAME ='" + database.escapeObjectName(projection, Projection.class) + "'";
+                        }
+                    }
                     Statement statement = ((JdbcConnection) database.getConnection()).createStatement();
                     return statement.executeQuery(sql);
 //                return this.executeQuery(sql, database);
@@ -181,11 +182,11 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
                             "join columns     c on (pc.table_column_id = c.column_id) " +
                             "WHERE p.PROJECTION_SCHEMA ='" + ((AbstractJdbcDatabase) database).getJdbcSchemaName(catalogAndSchema) + "'";
 
-//                    if (!bulk) {
-//                        if (tableName != null) {
-//                            sql += " AND ANCHOR_TABLE_NAME='" + database.escapeObjectName(tableName, Table.class) + "'";
-//                        }
-//                    }
+                    if (!bulk) {
+                        if (projection != null) {
+                            sql += " AND pc.PROJECTION_NAME ='" + database.escapeObjectName(projection, Projection.class) + "'";
+                        }
+                    }
                     Statement statement = ((JdbcConnection) database.getConnection()).createStatement();
                     return statement.executeQuery(sql);
 //                return this.executeQuery(sql, database);
