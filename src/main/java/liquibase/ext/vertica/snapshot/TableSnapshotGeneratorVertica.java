@@ -17,8 +17,6 @@ import liquibase.util.StringUtils;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by vesterma on 06/02/14.
@@ -110,16 +108,12 @@ public class TableSnapshotGeneratorVertica extends JdbcSnapshotGenerator {
         /*
         * Get the vertica specific details: ksafe, partition by, etc'
         * */
-        String ddl = ((VerticaDatabase)database).executeSQL("select EXPORT_TABLES('','"+table.getName()+"')");
-        String pat = "PARTITION BY \\((.*)\\)";
-        Pattern pattern = Pattern.compile(pat);
-        Matcher matcher = pattern.matcher(ddl);
-        if (matcher.find()) {
-//            System.out.println(matcher.group(0));
-            table.setAttribute("partitionby",matcher.group(1));
-        } else {
-//            System.out.println("Match not found: " + ddl);
-        }
+
+        String partitionby = ((VerticaDatabase)database).executeSQL("select partition_expression from tables where table_name ='"+table.getName()+"'");
+        if(partitionby != null)
+            table.setAttribute("partitionby",partitionby);
+
+
 
         return table;
     }

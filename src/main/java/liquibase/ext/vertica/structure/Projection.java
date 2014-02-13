@@ -27,6 +27,16 @@ public class Projection extends Relation {
         this.setAttribute("subquery", subquery);
     }
 
+    public String getKSafe() {
+        return getAttribute("ksafe", String.class);
+    }
+
+    public void setKSafe(String kSafe) {
+        this.setAttribute("ksafe", kSafe);
+    }
+
+
+
 
 
 

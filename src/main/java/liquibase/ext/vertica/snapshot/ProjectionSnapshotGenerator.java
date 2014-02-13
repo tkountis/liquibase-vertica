@@ -6,6 +6,7 @@ import liquibase.database.Database;
 import liquibase.exception.DatabaseException;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.ext.vertica.structure.Projection;
+import liquibase.ext.vertica.structure.Segmentation;
 import liquibase.snapshot.CachedRow;
 import liquibase.snapshot.DatabaseSnapshot;
 import liquibase.snapshot.InvalidExampleException;
@@ -16,6 +17,8 @@ import liquibase.util.StringUtils;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -104,8 +107,26 @@ public class ProjectionSnapshotGenerator extends JdbcSnapshotGenerator {
                     pr.setName(cleanNameFromDatabase((String) projection.get("PROJ_NAME"), database));
                     pr.setSchema(schema);
                     pr.setSubquery("Select * from " + (String) projection.get("TABLE_NAME"));
+                    pr.setKSafe((String) projection.get("K_SAFE"));
 //                schema.addDatabaseObject(pr);
 //                table.getAttribute("projections", List.class).add(pr);
+
+                    String segmentation =  (String) projection.get("SEGMENTATION");
+                    if (segmentation != null){
+                        Segmentation segmentation1 = new Segmentation();
+                        String pat = "segment expression: (.*)\\((.*)\\) implicit range:";
+                        Pattern pattern = Pattern.compile(pat);
+                        Matcher matcher = pattern.matcher(segmentation);
+                        if (matcher.find()) {
+
+                            pr.setAttribute("segmentation",matcher.group(1)+"("+matcher.group(2)+")");
+
+                        } else {
+                            System.out.println("failed to parse segmentation: "+segmentation);
+                        }
+                    }
+
+
                     schema.addDatabaseObject(pr);
 
                 }

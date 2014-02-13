@@ -298,15 +298,17 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
         if (connection == null) {
             return null;
         }
-            StringBuilder  res = new StringBuilder();
+            StringBuilder  res = null;
         try {
             ResultSet resultSet = ((JdbcConnection) connection).createStatement().executeQuery(query);
             while (resultSet.next()){
+                if (res == null){res = new StringBuilder();}
                 res.append(resultSet.getString(1));
-        }
-            return res.toString();
+            }
+            if (res!=null)
+                return res.toString();
         } catch (Exception e) {
-            LogFactory.getLogger().info("Error getting default schema", e);
+            LogFactory.getLogger().info("Error got exception when running: " + query, e);
         }
         return null;
     }
