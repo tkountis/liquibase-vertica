@@ -64,12 +64,39 @@ public class ProjectionSnapshotGenerator extends JdbcSnapshotGenerator {
 
                 CatalogAndSchema schemaFromJdbcInfo = ((AbstractJdbcDatabase) database).getSchemaFromJdbcInfo("", rawSchemaName);
                 projection.setSchema(new Schema(schemaFromJdbcInfo.getCatalogName(), schemaFromJdbcInfo.getSchemaName()));
+                projection.setAnchorTable((String) row.get("TABLE_NAME"));
+                projection.setSubquery("Select * from " + (String) row.get("TABLE_NAME"));
+                projection.setKSafe((String) row.get("K_SAFE"));
+                projection.setOffset((Long) row.get("OFFSET"));
+//                schema.addDatabaseObject(pr);
+//                table.getAttribute("projections", List.class).add(pr);
+
+                projection.setIsSegmented((Boolean) row.get("IS_SEGMENTED"));
+                if (projection.getIsSegmented()){
+                    //String segmentation =  (String) projection.get("SEGMENTATION");
+                    String segmentedby = ((VerticaDatabase)database).executeSQL("select export_objects('','"+schema.getName()+"."+projection.getAnchorTable()+"',false)");
+                    //if (segmentation != null){
+                    Segmentation segment = new Segmentation();
+                    String pat = "SEGMENTED BY (.*)\\((.*)\\) (.*) (KSAFE|;)";
+                    Pattern pattern = Pattern.compile(pat);
+                    Matcher matcher = pattern.matcher(segmentedby);
+                    if (matcher.find()) {
+                        segment.setExpression(matcher.group(1)+"("+matcher.group(2)+")");
+                        projection.setSegmentedBy(matcher.group(1)+"("+matcher.group(2)+")");
+                        projection.setNodes(matcher.group(3));
+
+//                                pr.setAttribute("segmentedby",matcher.group(1)+"("+matcher.group(2)+")");
+
+                    } else {
+                        System.out.println("failed to parse segmentation: "+segmentedby);
+                    }
 
           /*      try {
                     projection.setDefinition(database.getProjectionDefinition(schemaFromJdbcInfo, projection.getName()));
                 } catch (DatabaseException e) {
                     throw new DatabaseException("Error getting " + database.getConnection().getURL() + " projection with " + new GetProjectionDefinitionStatement(projection.getSchema().getCatalogName(), projection.getSchema().getName(), rawProjectionName), e);
                 }*/
+                }
 
                 return projection;
             } else {
@@ -105,25 +132,34 @@ public class ProjectionSnapshotGenerator extends JdbcSnapshotGenerator {
                 for (CachedRow projection : metadata) {
                     Projection pr = new Projection();
                     pr.setName(cleanNameFromDatabase((String) projection.get("PROJ_NAME"), database));
+                    pr.setAnchorTable((String) projection.get("TABLE_NAME"));
                     pr.setSchema(schema);
                     pr.setSubquery("Select * from " + (String) projection.get("TABLE_NAME"));
                     pr.setKSafe((String) projection.get("K_SAFE"));
+                    pr.setOffset((Long) projection.get("OFFSET"));
 //                schema.addDatabaseObject(pr);
 //                table.getAttribute("projections", List.class).add(pr);
 
-                    String segmentation =  (String) projection.get("SEGMENTATION");
-                    if (segmentation != null){
-                        Segmentation segmentation1 = new Segmentation();
-                        String pat = "segment expression: (.*)\\((.*)\\) implicit range:";
-                        Pattern pattern = Pattern.compile(pat);
-                        Matcher matcher = pattern.matcher(segmentation);
-                        if (matcher.find()) {
+                    pr.setIsSegmented((Boolean) projection.get("IS_SEGMENTED"));
+                    if (pr.getIsSegmented()){
+                        //String segmentation =  (String) projection.get("SEGMENTATION");
+                        String segmentedby = ((VerticaDatabase)database).executeSQL("select export_objects('','"+schema.getName()+"."+pr.getAnchorTable()+"',false)");
+                        //if (segmentation != null){
+                            Segmentation segment = new Segmentation();
+                            String pat = "SEGMENTED BY (.*)\\((.*)\\) (.*) (KSAFE|;)";
+                            Pattern pattern = Pattern.compile(pat);
+                            Matcher matcher = pattern.matcher(segmentedby);
+                            if (matcher.find()) {
+                                segment.setExpression(matcher.group(1)+"("+matcher.group(2)+")");
+                                pr.setSegmentedBy(matcher.group(1)+"("+matcher.group(2)+")");
+                                pr.setNodes(matcher.group(3));
 
-                            pr.setAttribute("segmentation",matcher.group(1)+"("+matcher.group(2)+")");
+//                                pr.setAttribute("segmentedby",matcher.group(1)+"("+matcher.group(2)+")");
 
-                        } else {
-                            System.out.println("failed to parse segmentation: "+segmentation);
-                        }
+                            } else {
+                                System.out.println("failed to parse segmentation: "+segmentedby);
+                            }
+                        //}
                     }
 
 

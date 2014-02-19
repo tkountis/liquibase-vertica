@@ -11,6 +11,15 @@ import liquibase.structure.core.Relation;
  */
 public class Projection extends Relation {
 
+
+    public String getAnchorTable(){
+        return getAttribute("anchorTable", String.class);
+    }
+
+    public void setAnchorTable(String anchorTable){
+        setAttribute("anchorTable", anchorTable);
+    }
+
     public String getDefinition() {
         return getAttribute("definition", String.class);
     }
@@ -35,9 +44,52 @@ public class Projection extends Relation {
         this.setAttribute("ksafe", kSafe);
     }
 
+    public String getOrderBy() {
+        return getAttribute("orderby", String.class);
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.setAttribute("orderby", orderBy);
+    }
+    public void setSegmentation(Segmentation segmentation){
+        this.setAttribute("segmentation", segmentation);
+    }
+
+    public Segmentation getSegmentation(){
+        return getAttribute("segmentation", Segmentation.class);
+    }
+
+    public String getSegmentedBy() {
+        return getAttribute("segmentedby", String.class);
+    }
+
+    public void setSegmentedBy(String segmentedBy) {
+        this.setAttribute("segmentedby", segmentedBy);
+    }
 
 
+    public void setOffset(Long offset) {
+        this.setAttribute("offset", offset);
+    }
+    public Long getOffset() {
+        return this.getAttribute("offset", Long.class);
+    }
 
+    public void setIsSegmented(boolean isSegmented){
+        this.setAttribute("isSegmented", isSegmented);
+    }
 
+    public boolean getIsSegmented(){
+        if (this.getAttribute("isSegmented", boolean.class) != null)
+            return this.getAttribute("isSegmented", boolean.class);
+        return false;
+    }
 
+    public String getNodes(){
+        return getAttribute("nodes", String.class);
+    }
+
+    public void setNodes(String nodes){
+        setAttribute("nodes", nodes);
+    }
 }

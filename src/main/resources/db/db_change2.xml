@@ -15,7 +15,7 @@
             <vert:columnv name="tttt" type="VARCHAR(24)" encoding="RLE" />
         </vert:addVerticaColumn>
 
-        <vert:createProjection schemaName="public" projectionName="liquitest_encoding_proj" subquery="select * from liquitest" orderby="str" ksafe="0">
+        <vert:createProjection schemaName="public" projectionName="liquitest_encoding_proj" subquery="select * from liquitest" orderby="str" ksafe="0" >
             <vert:grouped>
                 <vert:columnv name="id" encoding="RLE" />
                 <vert:columnv name="str"/>

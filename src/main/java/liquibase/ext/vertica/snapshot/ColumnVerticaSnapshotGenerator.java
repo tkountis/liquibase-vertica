@@ -28,7 +28,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 /**
  * Created by vesterma on 08/01/14.
@@ -105,6 +107,10 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
                     exampleColumn.setRelation(relation).setName(row.getString("COLUMN_NAME"));
                     relation.getColumns().add(exampleColumn);
                 }
+
+                String orderBy = createOrderByClause(allColumnsMetadataRs);
+                relation.setOrderBy(orderBy);
+
             } catch (Exception e) {
                 throw new DatabaseException(e);
             }
@@ -138,6 +144,31 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
 
     }
 
+    /**
+     * Yaron Relevy added:
+     * VerticaDatabaseSnapshot.verticaQuery method brings the sort_position that we create out of it the "orderby" clause
+     * @param columnsMetadataRs
+     */
+    protected String createOrderByClause(List<CachedRow> columnsMetadataRs) {
+        Map<Integer,String> sortPositionToColumnMap = new TreeMap<Integer,String>();
+        //populate sortPositionToColumnMap:
+        for (CachedRow row : columnsMetadataRs) {
+            Integer sortPosition = row.getInt("SORT_POSITION");
+            if(sortPosition != null){
+                String columnName = row.getString("COLUMN_NAME");
+                sortPositionToColumnMap.put(sortPosition, columnName);
+            }
+
+        }
+        StringBuilder orderBy = new StringBuilder();
+        for(int i = 0; i < sortPositionToColumnMap.size(); i++){
+            if(i > 0){
+                orderBy.append(",");
+            }
+            orderBy.append(sortPositionToColumnMap.get(i));
+        }
+        return orderBy.toString();
+    }
 
 
     /*

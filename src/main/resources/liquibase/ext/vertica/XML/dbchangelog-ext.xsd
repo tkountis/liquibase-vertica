@@ -211,6 +211,7 @@
             <xsd:attribute name="orderby" type="xsd:string"/>
             <xsd:attribute name="subquery" type="xsd:string" use="required"></xsd:attribute>
             <xsd:attribute name="ksafe" type="xsd:integer"></xsd:attribute>
+            <xsd:attributeGroup ref="segmentation"/>
             <xsd:sequence>
                 <xsd:element ref="columnv" minOccurs="1" maxOccurs="unbounded"/>
                 <xsd:element ref="grouped" minOccurs="1" maxOccurs="unbounded"/>
@@ -226,7 +227,7 @@
     </xsd:element>
 
     <xsd:attributeGroup name="segmentation">
-        <xsd:attribute name="expression" type="xsd:string"/>
+        <xsd:attribute name="segmentedby" type="xsd:string"/>
         <xsd:attribute name="allNodes" type="xsd:boolean"/>
         <xsd:attribute name="offset" type="xsd:integer"/>
         <xsd:attribute name="nodes" type="xsd:string"/>

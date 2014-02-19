@@ -110,7 +110,7 @@ public class TableSnapshotGeneratorVertica extends JdbcSnapshotGenerator {
         * */
 
         String partitionby = ((VerticaDatabase)database).executeSQL("select partition_expression from tables where table_name ='"+table.getName()+"'");
-        if(partitionby != null)
+        if((partitionby != null)&&(!partitionby.isEmpty()))
             table.setAttribute("partitionby",partitionby);
 
 

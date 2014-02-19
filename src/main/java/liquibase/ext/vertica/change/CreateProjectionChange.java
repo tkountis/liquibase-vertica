@@ -39,6 +39,9 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
     private Integer    ksafe;
     private List<GroupedColumns> groupedColumns;
     private Segmentation segmentation;
+    private String segmentedby;
+    private Long offset;
+    private String nodes;
     private String subquery;
 
     private List<ColumnConfigVertica> columns;
@@ -211,5 +214,29 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getSegmentedby() {
+        return segmentedby;
+    }
+
+    public void setSegmentedby(String segmentedby) {
+        this.segmentedby = segmentedby;
+    }
+
+    public String getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(String nodes) {
+        this.nodes = nodes;
+    }
+
+    public Long getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Long offset) {
+        this.offset = offset;
     }
 }
