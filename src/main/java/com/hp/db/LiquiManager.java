@@ -10,12 +10,15 @@ import liquibase.exception.LiquibaseException;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.ext.vertica.snapshot.ColumnVerticaSnapshotGenerator;
 import liquibase.integration.commandline.CommandLineUtils;
+import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.snapshot.jvm.UniqueConstraintSnapshotGenerator;
 import liquibase.util.StringUtils;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -73,10 +76,10 @@ public class LiquiManager {
         Liquibase liquibase = null;
         try {
 //            liquibase = new Liquibase("C:\\Users\\vesterma\\Documents\\Projects\\liquibase\\target\\classes\\db\\db.changelog.xml", new FileSystemResourceAccessor(),dc);
-//            liquibase = new Liquibase("C:\\Users\\vesterma\\Documents\\Projects\\liquibase\\target\\classes\\db\\db_change2.xml", new FileSystemResourceAccessor(),dc);
+            liquibase = new Liquibase("C:\\Users\\vesterma\\Documents\\Projects\\liquibase\\target\\classes\\db\\db_change1.xml", new FileSystemResourceAccessor(),dc);
 //            liquibase = new Liquibase("C:\\Temp\\test.xml", new FileSystemResourceAccessor(),dc);
 //            liquibase.rollback(2,"");
-//            liquibase.update(2,"");
+            liquibase.update(1,"");
 //            liquibase.changeLogSync("");
 //            liquibase.generateDocumentation("c:\\temp");
             String defaultCatalogName = "public";
