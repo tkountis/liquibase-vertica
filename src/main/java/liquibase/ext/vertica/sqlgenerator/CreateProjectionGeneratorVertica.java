@@ -25,7 +25,8 @@ public class CreateProjectionGeneratorVertica extends AbstractSqlGenerator<Creat
         ValidationErrors validationErrors = new ValidationErrors();
 
         validationErrors.checkRequiredField("projectionName", statement.getProjectionName());
-        validationErrors.checkRequiredField("subquery", statement.getSubquery());
+        //TODO: check if validation not needed.
+		//validationErrors.checkRequiredField("subquery", statement.getSubquery());
         return validationErrors;
 
         /*validationErrors.checkRequiredField("tableName", statement.getTableName());
