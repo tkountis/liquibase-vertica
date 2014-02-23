@@ -132,12 +132,12 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
         this.subquery = subquery;
     }
 
-    public Segmentation getSegmentation() {
+    /*public Segmentation getSegmentation() {
         Segmentation seg = new Segmentation();
         seg.setNodes(nodes);
         seg.setExpression(segmentedby);
         seg.setUnsegmented(segmentedby==null  ? true : false);
-        seg.setAllNodes(nodes.contains("ALL") ? true : false);
+        seg.setAllNodes(nodes==null || nodes.contains("ALL") ? true : false);
         seg.setOffset(offset);
         return seg;
     }
@@ -145,13 +145,17 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
     public void setSegmentation(Segmentation segmentation) {
         this.segmentation = segmentation;
     }
-
+*/
     public SqlStatement[] generateStatements(Database database) {
 
         CreateProjectionStatement statement = new CreateProjectionStatement(getSchemaName(),getProjectionName(),getTableName(),getColumns());
         statement.setGroupedColumns(getGroupedColumns());
         statement.setSchemaName(getSchemaName());
-        statement.setSegmentation(getSegmentation());
+
+        statement.setOffset(getOffset());
+        statement.setNodes(getNodes());
+        statement.setSegmentedby(getSegmentedby());
+//        statement.setSegmentation(getSegmentation());
         statement.setSubquery(getSubquery());
         statement.setOrderby(getOrderby());
         statement.setKsafe(getKsafe());

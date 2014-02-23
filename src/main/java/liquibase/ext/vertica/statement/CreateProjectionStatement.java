@@ -25,6 +25,9 @@ public class CreateProjectionStatement extends AbstractSqlStatement {
     private String schemaName;
     private String tableName;
     private Segmentation segmentation;
+    private String segmentedby;
+    private String nodes;
+    private Integer offset;
     private String orderby;
     private String subquery;
     private Integer ksafe;
@@ -170,5 +173,29 @@ public class CreateProjectionStatement extends AbstractSqlStatement {
 
     public void setGroupedColumns(List<GroupedColumns> groupedColumns) {
         this.groupedColumns = groupedColumns;
+    }
+
+    public String getSegmentedby() {
+        return segmentedby;
+    }
+
+    public void setSegmentedby(String segmentedby) {
+        this.segmentedby = segmentedby;
+    }
+
+    public String getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(String nodes) {
+        this.nodes = nodes;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
     }
 }

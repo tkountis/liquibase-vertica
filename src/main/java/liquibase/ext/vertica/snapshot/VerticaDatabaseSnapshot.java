@@ -112,10 +112,10 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
                 protected ResultSet verticaQuery(boolean bulk) throws DatabaseException, SQLException {
                     CatalogAndSchema catalogAndSchema = database.correctSchema(new CatalogAndSchema("", schemaName));
 
-                    String sql = "select PROJECTION_SCHEMA AS TABLE_SCHEM, PROJECTION_NAME AS PROJ_NAME, ANCHOR_TABLE_NAME AS TABLE_NAME , seg.segexpr as SEGMENTATION , seg.offset as OFFSET , " +
+                    String sql = "select PROJECTION_SCHEMA AS TABLE_SCHEM, PROJECTION_NAME AS PROJ_NAME, ANCHOR_TABLE_NAME AS TABLE_NAME , " + //seg.segexpr as SEGMENTATION , seg.offset as OFFSET , " +
                             "p.is_segmented as IS_SEGMENTED " +
                             "FROM V_CATALOG.PROJECTIONS p " +
-                            "join  v_internal.vs_segments seg on (p.PROJECTION_ID = seg.proj) " +
+                            //"join  v_internal.vs_segments seg on (p.PROJECTION_ID = seg.proj) " +
                             "WHERE PROJECTION_SCHEMA ='" + ((AbstractJdbcDatabase) database).getJdbcSchemaName(catalogAndSchema) + "'";
 
                     if (!bulk) {
