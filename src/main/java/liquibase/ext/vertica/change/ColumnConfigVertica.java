@@ -10,8 +10,8 @@ import liquibase.change.ColumnConfig;
  * To change this template use File | Settings | File Templates.
  */
 public class ColumnConfigVertica extends ColumnConfig {
-    private String encoding;
-    private Integer accessrank;
+    private String encoding = null;
+    private Integer accessrank = null;
 
     public String getEncoding() {
         return encoding;

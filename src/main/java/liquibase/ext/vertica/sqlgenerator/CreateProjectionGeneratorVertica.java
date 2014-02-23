@@ -101,11 +101,12 @@ public class CreateProjectionGeneratorVertica extends AbstractSqlGenerator<Creat
             }
             if (seg.getAllNodes()){
                 sql.append(" ALL NODES ");
-            }else{
-                sql.append(" NODES ").append(seg.getNodes());
                 if (seg.getOffset() != null)
                     sql.append(" OFFSET ").append(seg.getOffset().toString());
+            }else{
+                sql.append(" NODES ").append(seg.getNodes());
             }
+
         }
 
 

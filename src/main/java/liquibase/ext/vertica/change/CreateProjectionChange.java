@@ -40,7 +40,7 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
     private List<GroupedColumns> groupedColumns;
     private Segmentation segmentation;
     private String segmentedby;
-    private Long offset;
+    private Integer offset;
     private String nodes;
     private String subquery;
 
@@ -133,7 +133,13 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
     }
 
     public Segmentation getSegmentation() {
-        return segmentation;
+        Segmentation seg = new Segmentation();
+        seg.setNodes(nodes);
+        seg.setExpression(segmentedby);
+        seg.setUnsegmented(segmentedby==null  ? true : false);
+        seg.setAllNodes(nodes.contains("ALL") ? true : false);
+        seg.setOffset(offset);
+        return seg;
     }
 
     public void setSegmentation(Segmentation segmentation) {
@@ -232,11 +238,11 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
         this.nodes = nodes;
     }
 
-    public Long getOffset() {
+    public Integer getOffset() {
         return offset;
     }
 
-    public void setOffset(Long offset) {
+    public void setOffset(Integer offset) {
         this.offset = offset;
     }
 }

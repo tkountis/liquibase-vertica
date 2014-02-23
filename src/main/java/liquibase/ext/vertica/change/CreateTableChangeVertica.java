@@ -27,7 +27,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @DatabaseChange(name="createTable", description = "create tables", priority = ChangeMetaData.PRIORITY_DATABASE)
-public class CreateTableChangeVertica extends AbstractChange implements ChangeWithColumns<ColumnConfigVertica> {
+public class CreateTableChangeVertica extends AbstractChange implements ChangeWithColumns<ColumnConfig> {
 
     private String schemaName;
     private String tablespace;
@@ -47,30 +47,30 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
     private Segmentation segmentation;
     private String subquery;
 
-    private List<ColumnConfigVertica> columns;
+    private List<ColumnConfig> columns;
 
     @Override
-    public void addColumn(ColumnConfigVertica column) {
+    public void addColumn(ColumnConfig column) {
         columns.add(column);
     }
 
     @Override
     @DatabaseChangeProperty(requiredForDatabase = "vertica")
-    public List<ColumnConfigVertica> getColumns() {
+    public List<ColumnConfig> getColumns() {
         if (columns == null) {
-            return new ArrayList<ColumnConfigVertica>();
+            return new ArrayList<ColumnConfig>();
         }
         return columns;
     }
 
     @Override
-    public void setColumns(List<ColumnConfigVertica> columns) {
+    public void setColumns(List<ColumnConfig> columns) {
         this.columns = columns;
     }
 
     public CreateTableChangeVertica() {
         super();
-        columns = new ArrayList<ColumnConfigVertica>();
+        columns = new ArrayList<ColumnConfig>();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
         validationErrors.addAll(super.validate(database));
 
         if (columns != null) {
-            for (ColumnConfigVertica columnConfig : columns) {
+            for (ColumnConfig columnConfig : columns) {
                 if (columnConfig.getType() == null) {
                     validationErrors.addError("column 'type' is required for all columns");
                 }
@@ -95,7 +95,7 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
     public SqlStatement[] generateStatements(Database database) {
 
         CreateTableStatementVertica statement = new CreateTableStatementVertica("", getSchemaName(), getTableName());
-        for (ColumnConfigVertica column : getColumns()) {
+        for (ColumnConfig column : getColumns()) {
             ConstraintsConfig constraints = column.getConstraints();
             boolean isAutoIncrement = column.isAutoIncrement() != null && column.isAutoIncrement();
 
@@ -104,12 +104,24 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
             LiquibaseDataType columnType = DataTypeFactory.getInstance().fromDescription(column.getType() + (isAutoIncrement ? "{autoIncrement:true}" : ""));
             if (constraints != null && constraints.isPrimaryKey() != null && constraints.isPrimaryKey()) {
 
-                statement.addPrimaryKeyColumn(column.getName(), columnType, defaultValue, constraints.getPrimaryKeyName(), column.getEncoding(),column.getAccessrank(), constraints.getPrimaryKeyTablespace());
+                if (column instanceof ColumnConfigVertica){
+                    ColumnConfigVertica col = (ColumnConfigVertica) column;
+                    statement.addPrimaryKeyColumn(column.getName(), columnType, defaultValue, constraints.getPrimaryKeyName(), col.getEncoding(),col.getAccessrank(), constraints.getPrimaryKeyTablespace());
+                }else{
+                    statement.addPrimaryKeyColumn(column.getName(), columnType, defaultValue, constraints.getPrimaryKeyName(), null,null, constraints.getPrimaryKeyTablespace());
+                }
 
             } else {
-                statement.addColumn(column.getName(),
+                if (column instanceof ColumnConfigVertica){
+                    ColumnConfigVertica col = (ColumnConfigVertica) column;
+                    statement.addColumn(column.getName(),
                         columnType,
-                        defaultValue,column.getEncoding(),column.getAccessrank());
+                        defaultValue,col.getEncoding(),col.getAccessrank());
+                }else{
+                    statement.addColumn(column.getName(),
+                            columnType,
+                            defaultValue,null,null);
+                }
             }
 
 
