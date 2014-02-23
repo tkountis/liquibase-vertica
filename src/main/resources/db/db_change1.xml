@@ -1,10 +1,71 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-    <changeSet id="1" author="vesterma" dbms="Vertica" >
-        <modifyDataType columnName="v2"
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:vert="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   ../liquibase/ext/vertica/xml/dbchangelog-ext.xsd">
+
+<changeSet id="1" author="vesterma" dbms="Vertica" >
+    <vert:createTable partitionby="floor((user_actions_raw.timestamplong / 3600000))" tableName="user_actions_raw">
+        <column name="applicationid" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="timestamp" type="timestamp">
+            <constraints nullable="false"/>
+        </column>
+        <column name="timestamplong" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="actionid" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="action_name" type="VARCHAR(2000)"/>
+        <column name="appversionid" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="deviceid" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="durationtime" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="isslowbybaseline" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="isslowbystatic" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="deviceosid" type="INT"/>
+        <column name="deviceos" type="VARCHAR(50)"/>
+        <column name="devicemodelid" type="INT"/>
+        <column name="devicemodel" type="VARCHAR(50)"/>
+        <column name="devicevendor" type="VARCHAR(50)"/>
+    </vert:createTable>
+    <addPrimaryKey columnNames="applicationid, actionid, appversionid, deviceid, timestamplong" constraintName="user_actions_raw_pk" tableName="user_actions_raw"/>
+    <vert:createProjection nodes="ALL NODES" orderby="applicationid,appversionid,actionid,action_name,isslowbystatic,deviceid,timestamplong" projectionName="user_actions_raw_super" schemaName="public" segmentedby="hash(user_actions_raw.applicationid, user_actions_raw.actionid, user_actions_raw.appversionid, user_actions_raw.timestamplong)" subquery="Select * from user_actions_raw">
+        <vert:columnv encoding="AUTO" name="applicationid" type="INT"/>
+        <vert:columnv encoding="AUTO" name="timestamp" type="timestamp"/>
+        <vert:columnv encoding="AUTO" name="timestamplong" type="INT"/>
+        <vert:columnv encoding="AUTO" name="actionid" type="INT"/>
+        <vert:columnv encoding="AUTO" name="action_name" type="VARCHAR(2000)"/>
+        <vert:columnv encoding="AUTO" name="appversionid" type="INT"/>
+        <vert:columnv encoding="AUTO" name="deviceid" type="INT"/>
+        <vert:columnv encoding="AUTO" name="durationtime" type="INT"/>
+        <vert:columnv encoding="AUTO" name="isslowbybaseline" type="INT"/>
+        <vert:columnv encoding="AUTO" name="isslowbystatic" type="INT"/>
+        <vert:columnv encoding="AUTO" name="deviceosid" type="INT"/>
+        <vert:columnv encoding="AUTO" name="deviceos" type="VARCHAR(50)"/>
+        <vert:columnv encoding="AUTO" name="devicemodelid" type="INT"/>
+        <vert:columnv encoding="AUTO" name="devicemodel" type="VARCHAR(50)"/>
+        <vert:columnv encoding="AUTO" name="devicevendor" type="VARCHAR(50)"/>
+    </vert:createProjection>
+
+        <!--modifyDataType columnName="v2"
                         newDataType="varchar(200)"
                         schemaName="maas_1"
-                        tableName="test4"/>
+                        tableName="test4"/-->
 
     </changeSet>
 </databaseChangeLog>

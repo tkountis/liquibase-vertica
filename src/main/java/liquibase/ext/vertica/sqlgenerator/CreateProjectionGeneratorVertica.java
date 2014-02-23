@@ -6,7 +6,6 @@ import liquibase.ext.vertica.change.ColumnConfigVertica;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.ext.vertica.statement.CreateProjectionStatement;
 import liquibase.ext.vertica.structure.GroupedColumns;
-import liquibase.ext.vertica.structure.Segmentation;
 import liquibase.sql.Sql;
 import liquibase.sql.UnparsedSql;
 import liquibase.sqlgenerator.SqlGeneratorChain;
@@ -89,25 +88,25 @@ public class CreateProjectionGeneratorVertica extends AbstractSqlGenerator<Creat
         if(statement.getOrderby() != null)
             sql.append(" ORDER BY ").append(statement.getOrderby());
 
-        if (statement.getSegmentation() != null){
-            Segmentation seg = statement.getSegmentation();
-            if (seg.getUnsegmented() == true){
+
+
+            if (statement.getSegmentedby()==null){
                 sql.append(" UNSEGMENTED ");
             }else{
                 sql.append(" SEGMENTED BY ");
 
-                sql.append(seg.getExpression());
+                sql.append(statement.getSegmentedby());
 
             }
-            if (seg.getAllNodes()){
+            if (statement.getNodes().contains("ALL") ){
                 sql.append(" ALL NODES ");
-                if (seg.getOffset() != null)
-                    sql.append(" OFFSET ").append(seg.getOffset().toString());
+                if (statement.getOffset() != null)
+                    sql.append(" OFFSET ").append(statement.getOffset().toString());
             }else{
-                sql.append(" NODES ").append(seg.getNodes());
+                sql.append(" NODES ").append(statement.getNodes());
             }
 
-        }
+
 
 
         if (statement.getKsafe() != null)

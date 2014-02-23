@@ -1,11 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.1" encoding="UTF-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.1"
             targetNamespace="http://www.liquibase.org/xml/ns/dbchangelog-ext"
             xmlns="http://www.liquibase.org/xml/ns/dbchangelog-ext"
             elementFormDefault="qualified" >
 
     <xsd:include schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"/>
+    <!--xsd:redefine schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+        <xsd:element name="createTable">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element ref="column" minOccurs="1" maxOccurs="unbounded"/>
+                </xsd:sequence>
+                <xsd:attributeGroup ref="tableNameAttribute"/>
+                <xsd:attribute name="subquery" type="xsd:string"/>
+                <xsd:attribute name="tablespace" type="xsd:string"/>
+                <xsd:attribute name="remarks" type="xsd:string"/>
+                <xsd:attribute name="orderby" type="xsd:string"/>
+                <xsd:attribute name="partitionby" type="xsd:string"/>
+                <xsd:attributeGroup ref="segmentation"/>
+                <xsd:attribute name="ksafe" type="xsd:integer"/>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:redefine-->
     <!-- Constraints state -->
 
     <xsd:attributeGroup name="constraintState">
@@ -172,22 +189,6 @@
     </xsd:element>
 
 
-    <!-- Children for createTable -->
-    <xsd:element name="createTable">
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element ref="columnv" minOccurs="1" maxOccurs="unbounded"/>
-                <xsd:element ref="segmentation" minOccurs="0" maxOccurs="1"/>
-            </xsd:sequence>
-            <xsd:attributeGroup ref="tableNameAttribute"/>
-            <xsd:attribute name="subquery" type="xsd:string"/>
-            <xsd:attribute name="tablespace" type="xsd:string"/>
-            <xsd:attribute name="remarks" type="xsd:string"/>
-            <xsd:attribute name="orderby" type="xsd:string"/>
-            <xsd:attribute name="partitionby" type="xsd:string"/>
-            <xsd:attribute name="ksafe" type="xsd:integer"/>
-        </xsd:complexType>
-    </xsd:element>
 
     <xsd:attributeGroup name="tableNameAttribute">
         <xsd:attribute name="catalogName" type="xsd:string"/>

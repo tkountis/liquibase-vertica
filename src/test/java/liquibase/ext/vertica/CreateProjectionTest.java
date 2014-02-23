@@ -7,16 +7,9 @@ package liquibase.ext.vertica;
  * To change this template use File | Settings | File Templates.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import liquibase.change.Change;
 import liquibase.change.ChangeFactory;
 import liquibase.change.ChangeMetaData;
-import liquibase.changelog.ChangeLogIterator;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.ChangeSet;
 import liquibase.changelog.DatabaseChangeLog;
@@ -30,9 +23,16 @@ import liquibase.resource.ResourceAccessor;
 import liquibase.sql.Sql;
 import liquibase.sqlgenerator.SqlGeneratorFactory;
 import liquibase.statement.SqlStatement;
-
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 public class CreateProjectionTest extends BaseTestCase{
 
@@ -43,6 +43,7 @@ public class CreateProjectionTest extends BaseTestCase{
         cleanDB();
     }
 
+    @Ignore
     @Test
     public void getChangeMetaData() {
         CreateProjectionChange createMaterializedViewChange = new CreateProjectionChange();
@@ -52,6 +53,7 @@ public class CreateProjectionTest extends BaseTestCase{
         assertEquals(ChangeMetaData.PRIORITY_DEFAULT, ChangeFactory.getInstance().getChangeMetaData(createMaterializedViewChange).getPriority());
     }
 
+    @Ignore
     @Test
     public void getConfirmationMessage() {
         CreateProjectionChange change = new CreateProjectionChange();
@@ -61,6 +63,7 @@ public class CreateProjectionTest extends BaseTestCase{
                 + " has been created");
     }
 
+    @Ignore
     @Test
     public void generateStatement() {
 
@@ -96,6 +99,7 @@ public class CreateProjectionTest extends BaseTestCase{
 //        assertTrue(((CreateProjectionStatement) sqlStatements[0]).getForUpdate());
     }
 
+    @Ignore
     @Test
     public void parseAndGenerate() throws Exception {
         Database database = liquiBase.getDatabase();
@@ -130,6 +134,7 @@ public class CreateProjectionTest extends BaseTestCase{
         }
     }
 
+    @Ignore
     @Test
     public void test() throws Exception {
         liquiBase.update(null);
