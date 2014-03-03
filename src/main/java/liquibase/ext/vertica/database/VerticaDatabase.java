@@ -163,19 +163,32 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
             return false;
         }
 
-        @Override
+    @Override
+    public String getAutoIncrementClause(BigInteger startWith, BigInteger incrementBy) {
+        if (startWith != null && incrementBy != null){
+        return " IDENTITY("+startWith+","+incrementBy+") ";
+        }
+        return " AUTO_INCREMENT ";
+    }
+
+    @Override
+    public boolean supportsAutoIncrement() {
+        return true;
+    }
+
+    @Override
         public String getAutoIncrementClause() {
             return "";
         }
 
         @Override
         public boolean generateAutoIncrementStartWith(BigInteger startWith) {
-            return false;
+            return true;
         }
 
         @Override
         public boolean generateAutoIncrementBy(BigInteger incrementBy) {
-            return false;
+            return true;
         }
 
         @Override

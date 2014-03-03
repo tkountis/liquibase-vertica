@@ -1,7 +1,6 @@
 package liquibase.ext.vertica.sqlgenerator;
 
 import liquibase.database.Database;
-import liquibase.database.core.MSSQLDatabase;
 import liquibase.database.core.PostgresDatabase;
 import liquibase.datatype.DatabaseDataType;
 import liquibase.exception.ValidationErrors;
@@ -14,6 +13,7 @@ import liquibase.sql.UnparsedSql;
 import liquibase.sqlgenerator.SqlGeneratorChain;
 import liquibase.sqlgenerator.core.AbstractSqlGenerator;
 import liquibase.statement.AutoIncrementConstraint;
+import liquibase.util.StringUtils;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -71,7 +71,7 @@ public class CreateTableGeneratorVertica extends AbstractSqlGenerator<CreateTabl
             DatabaseDataType columnType = statement.getColumnTypes().get(column).toDatabaseDataType(database);
             sql.append(database.escapeColumnName(statement.getCatalogName(), statement.getSchemaName(), statement.getTableName(), column));
 
-            sql.append(" ").append(columnType);
+
             // This is the difference between vertica & other RDBMS - the encoding part.
 
 
@@ -94,14 +94,11 @@ public class CreateTableGeneratorVertica extends AbstractSqlGenerator<CreateTabl
             if (isPrimaryKeyColumn) {
                 primaryKeyColumns.add(column);
             }
-
+            if (!isAutoIncrementColumn) { sql.append(" ").append(columnType);}
 
             // for the serial data type in postgres, there should be no default value
             if (!columnType.isAutoIncrement() && statement.getDefaultValue(column) != null) {
                 Object defaultValue = statement.getDefaultValue(column);
-                if (database instanceof MSSQLDatabase) {
-                    sql.append(" CONSTRAINT ").append(((MSSQLDatabase) database).generateDefaultConstraintName(statement.getTableName(), column));
-                }
                 sql.append(" DEFAULT ");
                 sql.append(statement.getColumnTypes().get(column).objectToSql(defaultValue, database));
             }
@@ -123,6 +120,17 @@ public class CreateTableGeneratorVertica extends AbstractSqlGenerator<CreateTabl
                 } else {
                     LogFactory.getLogger().warning(database.getShortName()+" does not support autoincrement columns as request for "+(database.escapeTableName(statement.getCatalogName(), statement.getSchemaName(), statement.getTableName())));
                 }
+            }
+
+            if (isPrimaryKeyColumn) {
+
+                String pkName = StringUtils.trimToNull(statement.getPrimaryKeyConstraint().getConstraintName());
+                if (pkName != null) {
+                    sql.append(" CONSTRAINT ");
+                    sql.append(database.escapeConstraintName(pkName));
+                }
+
+                sql.append(" PRIMARY KEY ");
             }
 
             if (statement.getNotNullColumns().contains(column)) {

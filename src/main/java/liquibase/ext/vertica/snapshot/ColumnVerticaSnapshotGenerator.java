@@ -208,23 +208,20 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
         column.setEncoding(encoding);
 
         if (database.supportsAutoIncrement()) {
-            if (table instanceof Table) { // this is to proevent from entering...
+            if ((table instanceof Table) || (table instanceof Projection)) { // this is to proevent from entering...
                 if (columnMetadataResultSet.containsColumn("IS_AUTOINCREMENT")) {
-                    String isAutoincrement = (String) columnMetadataResultSet.get("IS_AUTOINCREMENT");
-                    isAutoincrement = StringUtils.trimToNull(isAutoincrement);
+                    Boolean isAutoincrement = (Boolean) columnMetadataResultSet.get("IS_AUTOINCREMENT");
                     if (isAutoincrement == null) {
                         column.setAutoIncrementInformation(null);
-                    } else if (isAutoincrement.equals("YES")) {
+                    } else if (isAutoincrement) {
                         column.setAutoIncrementInformation(new Column.AutoIncrementInformation());
-                    } else if (isAutoincrement.equals("NO")) {
-                        column.setAutoIncrementInformation(null);
-                    } else if (isAutoincrement.equals("")) {
-                        LogFactory.getLogger().info("Unknown auto increment state for column " + column.toString() + ". Assuming not auto increment");
+                    } else if (!isAutoincrement) {
                         column.setAutoIncrementInformation(null);
                     } else {
                         throw new UnexpectedLiquibaseException("Unknown is_autoincrement value: '" + isAutoincrement+"'");
                     }
                 } else {
+                    //TODO: verify if we still need this.
                     //probably older version of java, need to select from the column to find out if it is auto-increment
                     String selectStatement = "select " + database.escapeColumnName(rawCatalogName, rawSchemaName, rawProjectionName, rawColumnName) + " from " + database.escapeTableName(rawCatalogName, rawSchemaName, rawProjectionName) + " where 0=1";
                     LogFactory.getLogger().debug("Checking "+rawProjectionName+"."+rawCatalogName+" for auto-increment with SQL: '"+selectStatement+"'");

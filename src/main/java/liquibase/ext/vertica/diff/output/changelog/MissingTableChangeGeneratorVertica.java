@@ -78,7 +78,7 @@ public class MissingTableChangeGeneratorVertica  implements MissingObjectChangeG
 
             ConstraintsConfig constraintsConfig = null;
             // In MySQL, the primary key must be specified at creation for an autoincrement column
-            if (column.isAutoIncrement() && primaryKey != null && primaryKey.getColumnNamesAsList().contains(column.getName())) {
+            if (primaryKey != null && primaryKey.getColumnNamesAsList().contains(column.getName()) && primaryKey.getColumnNamesAsList().size()==1 ) {
                 constraintsConfig = new ConstraintsConfig();
                 constraintsConfig.setPrimaryKey(true);
                 constraintsConfig.setPrimaryKeyTablespace(primaryKey.getTablespace());
@@ -94,6 +94,7 @@ public class MissingTableChangeGeneratorVertica  implements MissingObjectChangeG
                 constraintsConfig = new ConstraintsConfig();
                 constraintsConfig.setNullable(false);
             }
+
 
             if (constraintsConfig != null) {
                 columnConfig.setConstraints(constraintsConfig);
