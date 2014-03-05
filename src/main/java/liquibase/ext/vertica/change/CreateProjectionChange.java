@@ -2,6 +2,7 @@ package liquibase.ext.vertica.change;
 
 import liquibase.change.*;
 import liquibase.database.Database;
+import liquibase.ext.vertica.customlogic.CustomLogicNamespaceDetails;
 import liquibase.ext.vertica.database.VerticaDatabase;
 import liquibase.ext.vertica.statement.CreateProjectionStatement;
 import liquibase.ext.vertica.structure.GroupedColumns;
@@ -249,4 +250,11 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
+
+    public String getSerializedObjectNamespace() {
+        return CustomLogicNamespaceDetails.CUSTOM_LOGIC_NAMESPACE;
+
+    }
+
+
 }

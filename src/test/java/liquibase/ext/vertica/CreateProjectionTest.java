@@ -111,7 +111,7 @@ public class CreateProjectionTest extends BaseTestCase{
         DatabaseChangeLog changeLog = ChangeLogParserFactory.getInstance().getParser(changeLogFile, resourceAccessor).parse(changeLogFile,
                 changeLogParameters, resourceAccessor);
 
-        database.checkDatabaseChangeLogTable(false, changeLog, null);
+//        database.checkDatabaseChangeLogTable(false, changeLog, null);
         changeLog.validate(database);
 
 
@@ -137,8 +137,8 @@ public class CreateProjectionTest extends BaseTestCase{
     @Ignore
     @Test
     public void test() throws Exception {
-        liquiBase.update(null);
-        liquiBase.rollback(1, null);
+//        liquiBase.update(null);
+//        liquiBase.rollback(1, null);
     }
 
 }

@@ -1,6 +1,6 @@
 package liquibase.ext.vertica.change;
 
-import liquibase.change.ColumnConfig;
+import liquibase.change.AddColumnConfig;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,17 +9,17 @@ import liquibase.change.ColumnConfig;
  * Time: 21:09
  * To change this template use File | Settings | File Templates.
  */
-public class ColumnConfigVertica extends ColumnConfig {
-    private String encoding = null;
+public class ColumnConfigVertica extends AddColumnConfig {
+//    private String encoding = null;
     private Integer accessrank = null;
 
-    public String getEncoding() {
-        return encoding;
-    }
+//    public String getEncoding() {
+//        return encoding;
+//    }
 
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
+//    public void setEncoding(String encoding) {
+//        this.encoding = encoding;
+//    }
 
     public Integer getAccessrank() {
         return accessrank;

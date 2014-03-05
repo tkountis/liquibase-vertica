@@ -116,11 +116,11 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
                     ColumnConfigVertica col = (ColumnConfigVertica) column;
                     statement.addColumn(column.getName(),
                         columnType,
-                        defaultValue,col.getEncoding(),col.getAccessrank());
+                        defaultValue,col.getEncoding(),col.getAccessrank(),null);
                 }else{
                     statement.addColumn(column.getName(),
                             columnType,
-                            defaultValue,null,null);
+                            defaultValue,null, (String) null, null);
                 }
             }
 

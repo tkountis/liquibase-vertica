@@ -1,14 +1,11 @@
 package liquibase.ext.vertica.statement;
 
 import liquibase.datatype.LiquibaseDataType;
-import liquibase.ext.vertica.change.ColumnConfigVertica;
 import liquibase.ext.vertica.structure.Segmentation;
 import liquibase.statement.ColumnConstraint;
 import liquibase.statement.core.CreateTableStatement;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +25,7 @@ public class CreateTableStatementVertica extends CreateTableStatement{
 
 
     private String projectionName;
-    private List<ColumnConfigVertica> columns = new ArrayList<ColumnConfigVertica>();
+    //private List<ColumnConfigVertica> columns = new ArrayList<ColumnConfigVertica>();
     private Map<String, String> columnEncodings = new HashMap<String, String>();
     private Map<String, Integer> columnAccessrank = new HashMap<String, Integer>();
 
@@ -55,14 +52,14 @@ public class CreateTableStatementVertica extends CreateTableStatement{
         return this;
     }
 
-    public CreateTableStatement addColumn(String columnName, LiquibaseDataType columnType, Object defaultValue, String encoding, ColumnConstraint... constraints){
+    public CreateTableStatement addColumn(String columnName, LiquibaseDataType columnType, Object defaultValue, String encoding, String remarks, ColumnConstraint... constraints){
         this.columnEncodings.put(columnName, encoding);
-        this.addColumn(columnName, columnType, defaultValue, constraints);
+        this.addColumn(columnName, columnType, defaultValue, remarks, constraints);
         return this;
     }
 
 
-    public CreateTableStatement addColumn(String columnName, LiquibaseDataType columnType, Object defaultValue, String encoding, Integer accessrank, ColumnConstraint... constraints){
+    public CreateTableStatement addColumn(String columnName, LiquibaseDataType columnType, Object defaultValue, String encoding, Integer accessrank, String remarks, ColumnConstraint... constraints){
         this.columnEncodings.put(columnName, encoding);
         this.columnAccessrank.put(columnName,accessrank);
         this.addColumn(columnName, columnType, defaultValue, constraints);

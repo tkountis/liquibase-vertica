@@ -36,8 +36,8 @@ public class IndexSnapshotGeneratorVertica extends IndexSnapshotGenerator {
         return null;
     }
 
-    //@Override
-    Class<? extends SnapshotGenerator>[] replaces(){
+    @Override
+    public Class<? extends SnapshotGenerator>[] replaces(){
         return new Class[]{IndexSnapshotGenerator.class};
     }
 

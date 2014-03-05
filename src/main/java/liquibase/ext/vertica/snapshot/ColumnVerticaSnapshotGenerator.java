@@ -14,8 +14,6 @@ import liquibase.logging.LogFactory;
 import liquibase.snapshot.CachedRow;
 import liquibase.snapshot.DatabaseSnapshot;
 import liquibase.snapshot.InvalidExampleException;
-import liquibase.snapshot.SnapshotGenerator;
-import liquibase.snapshot.jvm.ColumnSnapshotGenerator;
 import liquibase.snapshot.jvm.JdbcSnapshotGenerator;
 import liquibase.statement.DatabaseFunction;
 import liquibase.structure.DatabaseObject;
@@ -482,9 +480,9 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     }
 
-    //@Override
-    Class<? extends SnapshotGenerator>[] replaces(){
+    /*@Override
+    public Class<? extends SnapshotGenerator>[] replaces(){
         return new Class[]{ColumnSnapshotGenerator.class};
-    }
+    }*/
 
 }

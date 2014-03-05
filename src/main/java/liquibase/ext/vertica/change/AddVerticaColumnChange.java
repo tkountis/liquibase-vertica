@@ -1,9 +1,6 @@
 package liquibase.ext.vertica.change;
 
-import liquibase.change.ChangeMetaData;
-import liquibase.change.ColumnConfig;
-import liquibase.change.ConstraintsConfig;
-import liquibase.change.DatabaseChange;
+import liquibase.change.*;
 import liquibase.change.core.AddColumnChange;
 import liquibase.database.Database;
 import liquibase.ext.vertica.statement.AddVerticaColumnStatement;
@@ -26,7 +23,7 @@ public class AddVerticaColumnChange extends AddColumnChange {
 
     public ColumnConfigVertica createColumnv(){
         ColumnConfigVertica col = new ColumnConfigVertica();
-        addColumn(col);
+        addColumn( col);
         return col;
     }
 
