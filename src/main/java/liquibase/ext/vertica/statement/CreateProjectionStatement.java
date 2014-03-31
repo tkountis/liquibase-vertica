@@ -30,7 +30,7 @@ public class CreateProjectionStatement extends AbstractSqlStatement {
     private Integer offset;
     private String orderby;
     private String subquery;
-    private Integer ksafe;
+    private String ksafe;
 
 
     private String projectionName;
@@ -96,11 +96,11 @@ public class CreateProjectionStatement extends AbstractSqlStatement {
         return addColumn(columnName, columnType, null, constraints);
     }
 
-    public Integer getKsafe() {
+    public String getKsafe() {
         return ksafe;
     }
 
-    public void setKsafe(Integer ksafe) {
+    public void setKsafe(String ksafe) {
         this.ksafe = ksafe;
     }
 

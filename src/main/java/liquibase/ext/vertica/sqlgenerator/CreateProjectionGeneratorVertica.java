@@ -109,8 +109,11 @@ public class CreateProjectionGeneratorVertica extends AbstractSqlGenerator<Creat
 
 
 
-        if (statement.getKsafe() != null)
-            sql.append(" KSAFE ").append(statement.getKsafe());
+        if (statement.getKsafe() != null){
+            sql.append(" KSAFE ");
+            if (!statement.getKsafe().isEmpty())
+                sql.append(statement.getKsafe());
+        }
 
        /* for (ColumnConfigVertica column : statement.getColumns()) {
 

@@ -1,11 +1,11 @@
 <?xml version="1.1" encoding="UTF-8"?>
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.1"
-            targetNamespace="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-            xmlns="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+            targetNamespace="http://www.liquibase.org/xml/ns/dbchangelog-ext/vert"
+            xmlns="http://www.liquibase.org/xml/ns/dbchangelog-ext/vert"
             elementFormDefault="qualified" >
 
-    <xsd:include schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"/>
+    <xsd:import namespace="http://www.liquibase.org/xml/ns/dbchangelog"/>
     <!--xsd:redefine schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
         <xsd:element name="createTable">
             <xsd:complexType>
@@ -24,6 +24,47 @@
         </xsd:element>
     </xsd:redefine-->
     <!-- Constraints state -->
+    <xsd:simpleType name="propertyExpression" id="propertyExpression">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="$\{[\w\.]+\}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="booleanExp" id="booleanExp">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <xsd:documentation>Extension to standard XSD boolean type to allow ${} parameters</xsd:documentation>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:boolean"/>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="propertyExpression"/>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+    <xsd:simpleType name="integerExp" id="integerExp">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <xsd:documentation>Extension to standard XSD integer type to allow ${} parameters</xsd:documentation>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:integer"/>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="propertyExpression"/>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:pattern value=""/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
 
     <xsd:attributeGroup name="constraintState">
         <xsd:attribute name="disable" type="xsd:boolean"/>
@@ -41,51 +82,8 @@
         <xsd:attribute name="condition" type="xsd:string" use="required"/>
     </xsd:attributeGroup>
 
-    <!--    table Attribute(the same) by Tomek -->
-
-    <xsd:attributeGroup name="tableAttribute">
-        <xsd:attribute name="schemaName" type="xsd:string"/>
-        <xsd:attribute name="tableName" type="xsd:string" use="required"/>
-        <xsd:attribute name="tablespace" type="xsd:string"/>
-    </xsd:attributeGroup>
-
-    <!--    AddCheck Constraint by Tomek -->
-
-    <xsd:element name="addCheck">
-        <xsd:complexType>
-            <xsd:attributeGroup ref="tableAttribute"/>
-            <xsd:attributeGroup ref="checkAttribute"/>
-            <xsd:attributeGroup ref="constraintState"/>
-        </xsd:complexType>
-    </xsd:element>
-
-    <!--    Drop Check Constraint by Tomek   -->
-
-    <xsd:element name="dropCheck">
-        <xsd:complexType>
-            <xsd:attributeGroup ref="tableAttribute"/>
-            <xsd:attribute name="constraintName" type="xsd:string" use="required"/>
-        </xsd:complexType>
-    </xsd:element>
 
 
-    <!--    Disable Constraint by Tomek -->
-
-    <xsd:element name="disableConstraint">
-        <xsd:complexType>
-            <xsd:attributeGroup ref="tableAttribute"/>
-            <xsd:attribute name="constraintName" type="xsd:string" use="required"/>
-        </xsd:complexType>
-    </xsd:element>
-
-    <!--    Enable Constraint by Tomke  -->
-
-    <xsd:element name="enableConstraint">
-        <xsd:complexType>
-            <xsd:attributeGroup ref="tableAttribute"/>
-            <xsd:attribute name="constraintName" type="xsd:string" use="required"/>
-        </xsd:complexType>
-    </xsd:element>
 
     <!-- Add Deferred Primary Key  -->
 
@@ -96,12 +94,6 @@
         <xsd:attribute name="initiallyDeferred" type="xsd:boolean"/>
     </xsd:attributeGroup>
 
-    <xsd:element name="addDeferredPrimaryKey">
-        <xsd:complexType>
-            <xsd:attributeGroup ref="tableAttribute"/>
-            <xsd:attributeGroup ref="constraintAtribute"/>
-        </xsd:complexType>
-    </xsd:element>
 
     <!-- Create Trigger -->
 
@@ -119,46 +111,6 @@
             <xsd:enumeration value="disable"></xsd:enumeration>
         </xsd:restriction>
     </xsd:simpleType>
-
-    <xsd:element name="createTrigger">
-        <xsd:complexType>
-            <xsd:attribute name="replace" type="xsd:boolean"/>
-            <xsd:attribute name="delete" type="xsd:boolean"/>
-            <xsd:attribute name="insert" type="xsd:boolean"/>
-            <xsd:attribute name="update" type="xsd:boolean"/>
-            <xsd:attribute name="updateOf" type="xsd:boolean"/>
-            <xsd:attribute name="tableName" type="xsd:string"/>
-            <xsd:attribute name="columnNames" type="xsd:string"/>
-            <xsd:attribute name="schemaName" type="xsd:string"/>
-            <xsd:attribute name="whenCondition" type="xsd:string"/>
-            <xsd:attribute name="nestedTableColumn" type="xsd:string"/>
-            <xsd:attribute name="viewName" type="xsd:string"/>
-            <xsd:attribute name="forEachRow" type="xsd:boolean"/>
-            <xsd:attribute name="triggerName" type="xsd:string" use="required"/>
-            <xsd:attribute name="afterBeforeInsteadOf" type="triggerActionType" use="required"/>
-            <xsd:attribute name="procedure" type="xsd:string" use="required"/>
-        </xsd:complexType>
-    </xsd:element>
-
-    <!-- Drop Trigger -->
-
-    <xsd:element name="dropTrigger">
-        <xsd:complexType>
-            <xsd:attribute name="triggerName" type="xsd:string" use="required"/>
-            <xsd:attribute name="schemaName" type="xsd:string"/>
-        </xsd:complexType>
-    </xsd:element>
-
-    <!-- Alter Trigger -->
-
-    <xsd:element name="alterTrigger">
-        <xsd:complexType>
-            <xsd:attribute name="schemaName" type="xsd:string"/>
-            <xsd:attribute name="triggerName" type="xsd:string" use="required"/>
-            <xsd:attribute name="enable_disable" type="EnableDisable"/>
-            <xsd:attribute name="newName" type="xsd:string"/>
-        </xsd:complexType>
-    </xsd:element>
 
     <!-- Long Update -->
 
@@ -179,15 +131,24 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:element name="setTransaction">
-        <xsd:complexType>
-            <xsd:attribute name="isolationLevel" type="xsd:string"/>
-            <xsd:attribute name="transactionName" type="xsd:string"/>
-            <xsd:attribute name="rollbackSegment" type="xsd:string"/>
-            <xsd:attribute name="readOnlyWrite" type="ReadOnlyWrite"/>
-        </xsd:complexType>
-    </xsd:element>
 
+    <!-- Attributes for constraints -->
+    <xsd:attributeGroup name="constraintsAttributes">
+        <xsd:attribute name="nullable" type="booleanExp" />
+        <xsd:attribute name="primaryKey" type="booleanExp" />
+        <xsd:attribute name="primaryKeyName" type="xsd:string" />
+        <xsd:attribute name="primaryKeyTablespace" type="xsd:string" />
+        <xsd:attribute name="unique" type="booleanExp" />
+        <xsd:attribute name="uniqueConstraintName" type="xsd:string" />
+        <xsd:attribute name="references" type="xsd:string" />
+        <xsd:attribute name="referencedTableName" type="xsd:string"/>
+        <xsd:attribute name="referencedColumnNames" type="xsd:string"/>
+        <xsd:attribute name="foreignKeyName" type="xsd:string" />
+        <xsd:attribute name="deleteCascade" type="booleanExp" />
+        <xsd:attribute name="deferrable" type="booleanExp" />
+        <xsd:attribute name="initiallyDeferred" type="booleanExp" />
+        <xsd:attribute name="checkConstraint" type="xsd:string" />
+    </xsd:attributeGroup>
 
 
     <xsd:attributeGroup name="tableNameAttribute">
@@ -197,36 +158,6 @@
     </xsd:attributeGroup>
 
     <!-- Create Materialized View -->
-
-    <xsd:element name="createProjection">
-        <xsd:complexType>
-            <xsd:attribute name="projectionName" type="xsd:string" use="required"></xsd:attribute>
-            <xsd:attribute name="schemaName" type="xsd:string"></xsd:attribute>
-            <xsd:attribute name="columnAliases" type="xsd:string"></xsd:attribute>
-            <xsd:attribute name="objectType" type="xsd:string"></xsd:attribute>
-            <xsd:attribute name="reducedPrecision" type="xsd:boolean"></xsd:attribute>
-            <xsd:attribute name="usingIndex" type="xsd:boolean"></xsd:attribute>
-            <xsd:attribute name="tableSpace" type="xsd:string"></xsd:attribute>
-            <xsd:attribute name="forUpdate" type="xsd:boolean"></xsd:attribute>
-            <xsd:attribute name="queryRewrite" type="EnableDisable"></xsd:attribute>
-            <xsd:attribute name="orderby" type="xsd:string"/>
-            <xsd:attribute name="subquery" type="xsd:string" use="required"></xsd:attribute>
-            <xsd:attribute name="ksafe" type="xsd:integer"></xsd:attribute>
-            <xsd:attributeGroup ref="segmentation"/>
-            <xsd:sequence>
-                <xsd:element ref="columnv" minOccurs="1" maxOccurs="unbounded"/>
-                <xsd:element ref="grouped" minOccurs="1" maxOccurs="unbounded"/>
-                <xsd:element ref="segmentation" maxOccurs="1"/>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:element>
-
-    <xsd:element name="segmentation">
-        <xsd:complexType>
-            <xsd:attributeGroup ref="segmentation"/>
-        </xsd:complexType>
-    </xsd:element>
-
     <xsd:attributeGroup name="segmentation">
         <xsd:attribute name="segmentedby" type="xsd:string"/>
         <xsd:attribute name="allNodes" type="xsd:boolean"/>
@@ -235,11 +166,39 @@
         <xsd:attribute name="unsegmented" type="xsd:boolean"/>
     </xsd:attributeGroup>
 
+    <xsd:attributeGroup name="projectionAttributes">
+        <xsd:attribute name="projectionName" type="xsd:string" use="required"></xsd:attribute>
+        <xsd:attribute name="schemaName" type="xsd:string"></xsd:attribute>
+        <xsd:attribute name="columnAliases" type="xsd:string"></xsd:attribute>
+        <xsd:attribute name="objectType" type="xsd:string"></xsd:attribute>
+        <xsd:attribute name="reducedPrecision" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="usingIndex" type="xsd:boolean"></xsd:attribute>
+        <xsd:attribute name="tableSpace" type="xsd:string"></xsd:attribute>
+        <xsd:attribute name="forUpdate" type="xsd:boolean"></xsd:attribute>
+
+        <!--xsd:attribute name="queryRewrite" type="EnableDisable"></xsd:attribute-->
+        <xsd:attribute name="orderby" type="xsd:string"/>
+        <xsd:attribute name="subquery" type="xsd:string" use="required"></xsd:attribute>
+        <xsd:attribute name="ksafe" type="integerExp"  ></xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:element name="createProjection">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="columnv" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="grouped" minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+            <xsd:attributeGroup ref="projectionAttributes"/>
+            <xsd:attributeGroup ref="segmentation"/>
+        </xsd:complexType>
+    </xsd:element>
+
     <xsd:element name="constraints">
         <xsd:complexType>
             <xsd:attributeGroup ref="constraintsAttributes" />
         </xsd:complexType>
     </xsd:element>
+
 
     <xsd:element name="columnv">
         <xsd:complexType mixed="true">
@@ -314,11 +273,11 @@
     </xsd:element>
 
     <!-- AddVerticaColumn-->
-    <xsd:complexType name="addVerticaColumn">
+    <!--xsd:complexType name="addVerticaColumn">
         <extension base="addColumn">
             <xsd:sequence>
-                <xsd:element ref="columnv" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element name="column"  minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </extension>
-    </xsd:complexType>
+    </xsd:complexType-->
 </xsd:schema>

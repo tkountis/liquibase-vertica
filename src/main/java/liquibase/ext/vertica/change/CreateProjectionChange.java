@@ -37,7 +37,7 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
     private String tableSpace;
     private Boolean forUpdate;
     private String orderby;
-    private Integer    ksafe;
+    private String    ksafe;
     private List<GroupedColumns> groupedColumns;
     private Segmentation segmentation;
     private String segmentedby;
@@ -113,11 +113,11 @@ public class CreateProjectionChange extends AbstractChange implements ChangeWith
         this.columns = columns;
     }
 
-    public Integer getKsafe() {
+    public String getKsafe() {
         return ksafe;
     }
 
-    public void setKsafe(Integer ksafe) {
+    public void setKsafe(String ksafe) {
         this.ksafe = ksafe;
     }
 

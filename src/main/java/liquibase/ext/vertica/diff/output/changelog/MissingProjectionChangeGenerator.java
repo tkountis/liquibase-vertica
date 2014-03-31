@@ -57,7 +57,7 @@ public class MissingProjectionChangeGenerator implements MissingObjectChangeGene
         change.setSchemaName(missingProjection.getSchema().getName());
 		change.setSubquery(missingProjection.getSubquery());
         if (missingProjection.getOrderBy() != null) change.setOrderby(missingProjection.getOrderBy());
-        if (missingProjection.getKSafe()!= null) change.setKsafe(new Integer(missingProjection.getKSafe()));
+        if (missingProjection.getKSafe()!= null) change.setKsafe(missingProjection.getKSafe());
         if  (missingProjection.getIsSegmented()) {
             change.setSegmentedby(missingProjection.getSegmentedBy());
         }
