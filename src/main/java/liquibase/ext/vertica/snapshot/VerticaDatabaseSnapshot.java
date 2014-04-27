@@ -112,7 +112,7 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
                 protected ResultSet verticaQuery(boolean bulk) throws DatabaseException, SQLException {
                     CatalogAndSchema catalogAndSchema = database.correctSchema(new CatalogAndSchema("", schemaName));
 
-                    String sql = "select PROJECTION_SCHEMA AS TABLE_SCHEM, PROJECTION_NAME AS PROJ_NAME, ANCHOR_TABLE_NAME AS TABLE_NAME , " + //seg.segexpr as SEGMENTATION , seg.offset as OFFSET , " +
+                    String sql = "select PROJECTION_SCHEMA AS TABLE_SCHEM, projection_basename AS PROJ_NAME, ANCHOR_TABLE_NAME AS TABLE_NAME , " + //seg.segexpr as SEGMENTATION , seg.offset as OFFSET , " +
                             "p.is_segmented as IS_SEGMENTED " +
                             "FROM V_CATALOG.PROJECTIONS p " +
                             //"join  v_internal.vs_segments seg on (p.PROJECTION_ID = seg.proj) " +
@@ -120,7 +120,7 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
 
                     if (!bulk) {
                         if (projection != null) {
-                            sql += " AND PROJECTION_NAME ='" + database.escapeObjectName(projection, Projection.class) + "'";
+                            sql += " AND projection_basename ='" + database.escapeObjectName(projection, Projection.class) + "'";
                         }
                     }
                     Statement statement = ((JdbcConnection) database.getConnection()).createStatement();
@@ -176,7 +176,7 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
                 protected ResultSet verticaQuery(boolean bulk) throws DatabaseException, SQLException {
                     CatalogAndSchema catalogAndSchema = database.correctSchema(new CatalogAndSchema("", schemaName));
 
-                    String sql = "select p.projection_schema AS TABLE_SCHEM,pc.projection_name AS PROJ_NAME,pc.projection_column_name AS COLUMN_NAME, " +
+                    String sql = "select p.projection_schema AS TABLE_SCHEM,p.projection_basename AS PROJ_NAME,pc.projection_column_name AS COLUMN_NAME, " +
                             "c.data_type AS TYPE_NAME, c.DATA_TYPE_ID AS DATA_TYPE,pc.encoding_type, c.is_nullable AS NULLABLE, IS_IDENTITY AS IS_AUTOINCREMENT," +
                             "pc.ENCODING_TYPE AS ENCODING , VERIFIED_FAULT_TOLERANCE as K_SAFE, " +
                             "pc.SORT_POSITION AS SORT_POSITION " + //Yaron Relevy added: for supporting "order by" in super projection. will be used in ColumnVerticaSnapshotGenerator.addTo method
@@ -187,7 +187,7 @@ public class VerticaDatabaseSnapshot extends JdbcDatabaseSnapshot {
 
                     if (!bulk) {
                         if (projection != null) {
-                            sql += " AND pc.PROJECTION_NAME ='" + database.escapeObjectName(projection, Projection.class) + "'";
+                            sql += " AND p.projection_basename ='" + database.escapeObjectName(projection, Projection.class) + "'";
                         }
                     }
                     Statement statement = ((JdbcConnection) database.getConnection()).createStatement();
