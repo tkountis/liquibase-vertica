@@ -57,9 +57,9 @@ public class MissingTableChangeGeneratorVertica  implements MissingObjectChangeG
 //        if (control.isIncludeCatalog()) {
 //            change.setCatalogName(missingTable.getSchema().getCatalogName());
 //        }
-        if (control.isIncludeSchema()) {
+//        if (control.isIncludeSchema()) {
             change.setSchemaName(missingTable.getSchema().getName());
-        }
+//        }
         if (missingTable.getRemarks() != null) {
             change.setRemarks(missingTable.getRemarks());
         }
@@ -70,7 +70,7 @@ public class MissingTableChangeGeneratorVertica  implements MissingObjectChangeG
         for (Column column : missingTable.getColumns()) {
             ColumnConfigVertica columnConfig = new ColumnConfigVertica();
             columnConfig.setName(column.getName());
-            columnConfig.setType(DataTypeFactory.getInstance().from(column.getType()).toDatabaseDataType(referenceDatabase).toString());
+            columnConfig.setType(DataTypeFactory.getInstance().from(column.getType(),comparisonDatabase).toDatabaseDataType(referenceDatabase).toString());
 
             if (column.isAutoIncrement()) {
                 columnConfig.setAutoIncrement(true);

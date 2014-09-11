@@ -87,7 +87,7 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
 
     @Override
         public boolean isCorrectDatabaseImplementation(DatabaseConnection conn) throws DatabaseException {
-            System.out.println("checking for vetica");
+            System.out.println("checking for vertica");
             return PRODUCT_NAME.equalsIgnoreCase(conn.getDatabaseProductName());
         }
 
@@ -199,6 +199,18 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
                 return super.escapeObjectName(objectName, objectType);
             }
         }
+
+    @Override
+    public String escapeObjectName(String catalogName, String schemaName, String objectName, Class<? extends DatabaseObject> objectType) {
+        if (hasMixedCase(objectName)) {
+            return "\"" + objectName + "\"";
+        } else {
+            return super.escapeObjectName(catalogName, schemaName, objectName, objectType);
+        }
+    }
+
+
+
 
         @Override
         public String correctObjectName(String objectName, Class<? extends DatabaseObject> objectType) {

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-2"?>
+ 
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+		
+<changeSet id="1" author="test">
+	<comment>Debut de la livraison de 1.0 vers </comment> 
+</changeSet>
+	
+<changeSet id="2" author="test" >
+	<sqlFile path="01_tab_test.sql" relativeToChangelogFile="true"  />
+	<comment>fichier : 01_tab_test.sql </comment> 
+</changeSet>
+<changeSet id="3" author="test">
+	<comment>Fin de la livraison 1.0</comment> 
+</changeSet>
+	
+<changeSet id="4" author="test">	
+	<tagDatabase tag="1.0"/>
+</changeSet>
+<changeSet id="5" author="test">
+    <ext:createTable partitionby="floor((timestamplong / 86400000))" tableName="TEST_VERTICA_2">
+        <column name="id" type="INT">
+            <constraints nullable="false"/>
+        </column>
+        <column name="timestamp" type="timestamp">
+            <constraints nullable="false"/>
+        </column>
+        <column name="timestamplong" type="INT" encoding="RLE">
+            <constraints nullable="false"/>
+        </column>
+    </ext:createTable>
+</changeSet>
+
+</databaseChangeLog>
+

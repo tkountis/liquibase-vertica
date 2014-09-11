@@ -38,7 +38,7 @@ public class CreateProjectionTest extends BaseTestCase{
 
     @Before
     public void setUp() throws Exception {
-        changeLogFile = "C:\\Users\\vesterma\\Documents\\Projects\\liquibase\\target\\classes\\db\\db_change2.xml";
+        changeLogFile = "C:\\Users\\vesterma\\Documents\\Projects\\liquibase\\target\\classes\\com.hp.db\\db_change2.xml";
         connectToDB();
         cleanDB();
     }

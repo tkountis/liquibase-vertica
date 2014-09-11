@@ -73,7 +73,7 @@ public class MissingProjectionChangeGenerator implements MissingObjectChangeGene
         for (Column column : missingProjection.getColumns()) {
             ColumnConfigVertica columnConfig = new ColumnConfigVertica();
             columnConfig.setName(column.getName());
-            columnConfig.setType(DataTypeFactory.getInstance().from(column.getType()).toDatabaseDataType(referenceDatabase).toString());
+            columnConfig.setType(DataTypeFactory.getInstance().from(column.getType(),comparisonDatabase).toDatabaseDataType(referenceDatabase).toString());
 
             if (column.isAutoIncrement()) {
                 columnConfig.setAutoIncrement(true);

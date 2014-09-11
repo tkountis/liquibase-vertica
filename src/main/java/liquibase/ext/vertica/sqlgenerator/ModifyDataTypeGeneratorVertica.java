@@ -28,16 +28,16 @@ public class ModifyDataTypeGeneratorVertica extends ModifyDataTypeGenerator {
         alterTable += getPreDataTypeString(database); // adds a space if nothing else
 
         // add column type
-        alterTable += DataTypeFactory.getInstance().fromDescription(statement.getNewDataType()).toDatabaseDataType(database);
+        alterTable += DataTypeFactory.getInstance().fromDescription(statement.getNewDataType(),database).toDatabaseDataType(database);
 
         return new Sql[]{new UnparsedSql(alterTable, getAffectedTable(statement))};
     }
 
 
     /**
-     * @return either "MODIFY" or "ALTER COLUMN" depending on the current db
+     * @return either "MODIFY" or "ALTER COLUMN" depending on the current com.hp.db
      */
-    private String getModifyString(Database database) {
+    protected String getModifyString(Database database) {
         return "ALTER COLUMN";
     }
 
@@ -45,7 +45,7 @@ public class ModifyDataTypeGeneratorVertica extends ModifyDataTypeGenerator {
      * @return the string that comes before the column type
      *         definition (like 'set data type' for derby or an open parentheses for Oracle)
      */
-    private String getPreDataTypeString(Database database) {
+    protected String getPreDataTypeString(Database database) {
         return " SET DATA TYPE ";
     }
 

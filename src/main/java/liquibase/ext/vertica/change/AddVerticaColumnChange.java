@@ -40,7 +40,8 @@ public class AddVerticaColumnChange extends AddColumnChange {
         }
 
         for (ColumnConfig colum : getColumns()) {
-            ColumnConfigVertica column = (ColumnConfigVertica) colum;
+//            ColumnConfigVertica column = (ColumnConfigVertica) colum;
+            ColumnConfig column =  colum;
             Set<ColumnConstraint> constraints = new HashSet<ColumnConstraint>();
             ConstraintsConfig constraintsConfig =column.getConstraints();
             if (constraintsConfig != null) {
@@ -71,7 +72,7 @@ public class AddVerticaColumnChange extends AddColumnChange {
                     column.getType(),
                     column.getDefaultValueObject(),
                     column.getEncoding(),
-                    column.getAccessrank(),
+                    null, //column.getAccessrank(), TODO: add support for accessrank
                     constraints.toArray(new ColumnConstraint[constraints.size()]));
 
             sql.add(addColumnStatement);

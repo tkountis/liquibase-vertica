@@ -7,7 +7,7 @@
                    http://www.liquibase.org/xml/ns/dbchangelog-ext/vert
                    ../liquibase/ext/vertica/xml/dbchangelog-ext.xsd">
     <changeSet author="jony" id="1">
-        <vert:createTable tableName="t7">
+        <vert:createTable tableName="t7" schemaName="bla">
             <column name="id" type="INT">
                 <constraints primaryKey="true" primaryKeyName="C_PRIMARY"/>
             </column>
@@ -18,11 +18,11 @@
         </vert:createTable>
     </changeSet>
     <changeSet author="jony" id="2">
-        <vert:createProjection nodes="ALL NODES" orderby="id" projectionName="t7_super" schemaName="bla" segmentedby="hash(t7.id)" subquery="Select * from t7" ksafe="">
+        <vert:createProjection nodes="ALL NODES" orderby="id" projectionName="t7_super" schemaName="bla" segmentedby="hash(t7.id)" subquery="Select * from bla.t7" ksafe="">
             <vert:columnv encoding="AUTO" name="id" type="INT"/>
             <vert:columnv encoding="AUTO" name="i1" type="INT"/>
             <vert:columnv encoding="AUTO" name="i2" type="INT"/>
         </vert:createProjection>
-        <dropTable tableName="test" schemaName="public" cascadeConstraints="true"/>
+        <!--dropTable tableName="test" schemaName="public" cascadeConstraints="true"/-->
     </changeSet>
 </databaseChangeLog>

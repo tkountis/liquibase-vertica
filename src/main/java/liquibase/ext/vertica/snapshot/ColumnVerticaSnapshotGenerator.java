@@ -325,7 +325,7 @@ public class ColumnVerticaSnapshotGenerator extends JdbcSnapshotGenerator { //ex
         String typeName = columnInfo.getType().getTypeName();
         Scanner scanner = new Scanner(stringVal.trim());
         try {
-            LiquibaseDataType liquibaseDataType = DataTypeFactory.getInstance().from(columnInfo.getType());
+            LiquibaseDataType liquibaseDataType = DataTypeFactory.getInstance().from(columnInfo.getType(),database);
             if (type == Types.ARRAY) {
                 return new DatabaseFunction(stringVal);
             } else if ((liquibaseDataType instanceof BigIntType || type == Types.BIGINT)) {

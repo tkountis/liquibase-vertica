@@ -3,6 +3,6 @@
     <!--<preConditions>
         <runningAs username="root"/>
     </preConditions>
-    &lt;!&ndash;include file="src/main/resources/db/db_generated_changelog.xml"/&ndash;&gt;
-    <include file="src/main/resources/db/db_change1.xml"/>-->
+    &lt;!&ndash;include file="src/main/resources/com.hp.db/db_generated_changelog.xml"/&ndash;&gt;
+    <include file="src/main/resources/com.hp.db/db_change1.xml"/>-->
 </databaseChangeLog>
