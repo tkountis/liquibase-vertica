@@ -120,7 +120,7 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
                 }else{
                     statement.addColumn(column.getName(),
                             columnType,
-                            defaultValue,null, (String) null, null);
+                            defaultValue,column.getEncoding(), (String) null, null);
                 }
             }
 
@@ -286,4 +286,5 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
     public String getSubquery() {
         return subquery;
     }
+
 }

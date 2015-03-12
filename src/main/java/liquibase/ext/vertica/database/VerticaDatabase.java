@@ -391,5 +391,8 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
 //        return CREATE_VIEW_AS_PATTERN.matcher(definition).replaceFirst("");
     }
 
-
+    @Override
+    public boolean supportsSchemas() {
+        return true;
+    }
 }

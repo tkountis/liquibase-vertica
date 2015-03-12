@@ -22,4 +22,6 @@ public class ColumnVertica extends Column {
     public String getEncoding() {
         return getAttribute("encoding", String.class);
     }
+
+
 }
