@@ -21,6 +21,16 @@ public class ColumnConfigVertica extends AddColumnConfig {
 //        this.encoding = encoding;
 //    }
 
+    public ColumnConfigVertica() {
+        super();
+        this.accessrank = null;
+    }
+
+    public ColumnConfigVertica(Integer accessrank) {
+        super();
+        this.accessrank = accessrank;
+    }
+
     public Integer getAccessrank() {
         return accessrank;
     }

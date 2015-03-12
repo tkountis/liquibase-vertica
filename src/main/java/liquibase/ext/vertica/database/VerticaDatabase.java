@@ -9,6 +9,7 @@ import liquibase.exception.DatabaseException;
 import liquibase.executor.ExecutorService;
 import liquibase.ext.vertica.statement.GetProjectionDefinitionStatement;
 import liquibase.logging.LogFactory;
+import liquibase.statement.core.GetViewDefinitionStatement;
 import liquibase.statement.core.RawSqlStatement;
 import liquibase.structure.DatabaseObject;
 import liquibase.structure.core.Table;
@@ -34,6 +35,7 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
 
         private static Pattern INITIAL_COMMENT_PATTERN = Pattern.compile("^/\\*.*?\\*/");
         private static Pattern CREATE_PROJECTION_AS_PATTERN = Pattern.compile("(?im)^\\s*(CREATE|ALTER)\\s+?PROJECTION\\s+?((\\S+?)|(\\[.*\\])|(\\\".*\\\"))\\s+?AS\\s*?", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        private static Pattern CREATE_VIEW_AS_PATTERN = Pattern.compile("^CREATE\\s+.*?VIEW\\s+.*?AS\\s+", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 
     private Set<String> reservedWords = new HashSet<String>();
@@ -87,7 +89,7 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
 
     @Override
         public boolean isCorrectDatabaseImplementation(DatabaseConnection conn) throws DatabaseException {
-            System.out.println("checking for vetica");
+            System.out.println("checking for vertica");
             return PRODUCT_NAME.equalsIgnoreCase(conn.getDatabaseProductName());
         }
 
@@ -199,6 +201,18 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
                 return super.escapeObjectName(objectName, objectType);
             }
         }
+
+    @Override
+    public String escapeObjectName(String catalogName, String schemaName, String objectName, Class<? extends DatabaseObject> objectType) {
+        if (hasMixedCase(objectName)) {
+            return "\"" + objectName + "\"";
+        } else {
+            return super.escapeObjectName(catalogName, schemaName, objectName, objectType);
+        }
+    }
+
+
+
 
         @Override
         public String correctObjectName(String objectName, Class<? extends DatabaseObject> objectType) {
@@ -365,5 +379,20 @@ public class VerticaDatabase extends  AbstractJdbcDatabase{
         return finalDef;
     }
 
+    @Override
+    public String getViewDefinition(CatalogAndSchema schema, final String viewName) throws DatabaseException {
+        schema = schema.customize(this);
+//        String definition = (String) ExecutorService.getInstance().getExecutor(this).queryForObject(new GetViewDefinitionStatement(schema.getCatalogName(), schema.getSchemaName(), viewName), String.class);
+        String definition = (String) ExecutorService.getInstance().getExecutor(this).queryForObject(new RawSqlStatement("select view_definition from views  where table_name='"+viewName+"' and table_schema='"+schema.getSchemaName()+"'"), String.class);
+        if (definition == null) {
+            return null;
+        }
+        return definition;
+//        return CREATE_VIEW_AS_PATTERN.matcher(definition).replaceFirst("");
+    }
 
+    @Override
+    public boolean supportsSchemas() {
+        return true;
+    }
 }

@@ -49,6 +49,8 @@ public class CreateProjectionGeneratorVertica extends AbstractSqlGenerator<Creat
         sql.append( "create PROJECTION ");
         if (statement.getSchemaName() != null)
             sql.append(statement.getSchemaName()).append(".");
+        else
+            sql.append(database.getDefaultSchemaName()).append(".");
         if (statement.getProjectionName() != null) {
             sql.append(statement.getProjectionName())
                     .append(" ");

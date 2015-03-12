@@ -101,7 +101,7 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
 
             Object defaultValue = column.getDefaultValueObject();
 
-            LiquibaseDataType columnType = DataTypeFactory.getInstance().fromDescription(column.getType() + (isAutoIncrement ? "{autoIncrement:true}" : ""));
+            LiquibaseDataType columnType = DataTypeFactory.getInstance().fromDescription(column.getType() + (isAutoIncrement ? "{autoIncrement:true}" : ""),database);
             if (constraints != null && constraints.isPrimaryKey() != null && constraints.isPrimaryKey()) {
 
                 if (column instanceof ColumnConfigVertica){
@@ -120,7 +120,7 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
                 }else{
                     statement.addColumn(column.getName(),
                             columnType,
-                            defaultValue,null, (String) null, null);
+                            defaultValue,column.getEncoding(), (String) null, null);
                 }
             }
 
@@ -286,4 +286,5 @@ public class CreateTableChangeVertica extends AbstractChange implements ChangeWi
     public String getSubquery() {
         return subquery;
     }
+
 }

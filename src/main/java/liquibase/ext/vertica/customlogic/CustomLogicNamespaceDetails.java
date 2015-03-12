@@ -50,10 +50,17 @@ public class CustomLogicNamespaceDetails implements NamespaceDetails {
         return CUSTOM_LOGIC_XSD;
     }
 
+    @Override
+    public String[] getNamespaces() {
+//        return new String[0];
+        String[] namespaces = {"vert"};
+        return namespaces;
+    }
+
 
     @Override
     public String getLocalPath(String namespace) {
-        return "liquibase/ext/vertica/xml/dbchangelog-ext.xsd";
+        return "xml/dbchangelog-ext.xsd";
 
     }
 

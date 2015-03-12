@@ -53,6 +53,8 @@ public class CreateTableGeneratorVertica extends AbstractSqlGenerator<CreateTabl
         sql.append( "CREATE TABLE ");
         if (statement.getSchemaName() != null)
             sql.append(statement.getSchemaName()).append(".");
+        else
+            sql.append(database.getDefaultSchemaName()).append(".");
         if (statement.getTableName() != null) {
             sql.append(statement.getTableName())
                     .append(" ");
