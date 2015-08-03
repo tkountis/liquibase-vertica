@@ -42,6 +42,7 @@ public class AddVerticaColumnChange extends AddColumnChange {
         for (AddColumnConfig colum : getColumns()) {
 //            ColumnConfigVertica column = (ColumnConfigVertica) colum;
             AddColumnConfig column =  colum;
+
             Set<ColumnConstraint> constraints = new HashSet<ColumnConstraint>();
             ConstraintsConfig constraintsConfig =column.getConstraints();
             if (constraintsConfig != null) {
