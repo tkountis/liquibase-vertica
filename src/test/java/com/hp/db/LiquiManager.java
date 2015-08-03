@@ -37,7 +37,8 @@ public class LiquiManager {
     public static void main(String[] args){
 
         VerticaDatabase verticaDatabase = new VerticaDatabase();
-        verticaDatabase.setDefaultSchemaName("maas");
+//        verticaDatabase.setDefaultSchemaName("maas");
+        verticaDatabase.setDefaultSchemaName("public");
 //        VerticaDatabase verticaDatabase1 = new VerticaDatabase();
 
         liquibase.database.DatabaseFactory.getInstance().clearRegistry();
@@ -61,7 +62,7 @@ public class LiquiManager {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(
-                    "jdbc:vertica://192.168.33.10:5433/CIDB2",
+                    "jdbc:vertica://myd-vm00387.hpswlabs.adapps.hp.com:5433/EMS",
                     myProp);
             conn.setAutoCommit(false);
         } catch (SQLException e) {
@@ -75,8 +76,8 @@ public class LiquiManager {
 
         Liquibase liquibase = null;
         try {
-            URL url = LiquiManager.class.getClassLoader().getResource("vertica_mohamed/dbchangelog.xml");
-//            URL url = LiquiManager.class.getClassLoader().getResource("EUM/liquibaseChangeSet.xml");
+//            URL url = LiquiManager.class.getClassLoader().getResource("vertica_mohamed/dbchangelog.xml");
+            URL url = LiquiManager.class.getClassLoader().getResource("EUM/verticaMetricTableChangeSet.xml");
             // this code translates the project relative path to an absolute one.
             File f;
             try {

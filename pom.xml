@@ -115,12 +115,12 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>3.2.2</version>
+            <version>3.3.3</version>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-maven-plugin</artifactId>
-            <version>3.2.2</version>
+            <version>3.3.3</version>
         </dependency>
         <dependency>
             <groupId>com.vertica</groupId>
