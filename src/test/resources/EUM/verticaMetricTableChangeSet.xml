@@ -79,4 +79,18 @@
             </vert:column>
         </vert:addVerticaColumn >
     </changeSet>
+    <changeSet author="avishag" id="11">
+        <vert:createTempTable tableName="test_temp" isGlobal="true" isPreserve="true">
+            <vert:column name="timestamp" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </vert:column>
+            <vert:column name="ts" type="INT">
+                <constraints nullable="false"/>
+            </vert:column>
+            <vert:column name="application_id" type="INT">
+                <constraints nullable="false"/>
+            </vert:column>
+        </vert:createTempTable>
+    </changeSet>
+
 </databaseChangeLog>

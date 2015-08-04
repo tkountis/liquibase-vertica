@@ -62,7 +62,7 @@ public class LiquiManager {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(
-                    "jdbc:vertica://myd-vm00387.hpswlabs.adapps.hp.com:5433/EMS",
+                    "jdbc:vertica://192.168.56.101:5433/CIDB2",
                     myProp);
             conn.setAutoCommit(false);
         } catch (SQLException e) {
@@ -92,7 +92,7 @@ public class LiquiManager {
 
 //            liquibase = new Liquibase("C:\\Temp\\test.xml", new FileSystemResourceAccessor(),dc);
 //            liquibase.rollback(2,"");
-            liquibase.update(7,"");
+            liquibase.update(11,"");
 //            liquibase.changeLogSync("");
 //            liquibase.generateDocumentation("c:\\temp");
             String defaultCatalogName = "public";
@@ -109,15 +109,15 @@ public class LiquiManager {
             boolean includeCatalog = false; //Boolean.parseBoolean(getCommandParam("includeCatalog", "false"));
             boolean includeSchema = false; //Boolean.parseBoolean(getCommandParam("includeSchema", "false"));
             boolean includeTablespace = false; //Boolean.parseBoolean(getCommandParam("includeTablespace", "false"));
-            DiffOutputControl diffOutputControl = new DiffOutputControl(includeCatalog, includeSchema, includeTablespace);
-            try {
-                DiffToChangeSetLog.doGenerateChangeLog(changeLogFile, verticaDatabase, defaultCatalogName, defaultSchemaName, StringUtils.trimToNull(diffTypes), StringUtils.trimToNull(changeSetAuthor), StringUtils.trimToNull(changeSetContext), StringUtils.trimToNull(dataOutputDirectory), diffOutputControl);
-//                CommandLineUtils.doDiffToChangeLog(changeLogFile, verticaDatabase, verticaDatabase1, diffOutputControl, "tables,projections");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            }
+//            DiffOutputControl diffOutputControl = new DiffOutputControl(includeCatalog, includeSchema, includeTablespace);
+//            try {
+////                DiffToChangeSetLog.doGenerateChangeLog(changeLogFile, verticaDatabase, defaultCatalogName, defaultSchemaName, StringUtils.trimToNull(diffTypes), StringUtils.trimToNull(changeSetAuthor), StringUtils.trimToNull(changeSetContext), StringUtils.trimToNull(dataOutputDirectory), diffOutputControl);
+////                CommandLineUtils.doDiffToChangeLog(changeLogFile, verticaDatabase, verticaDatabase1, diffOutputControl, "tables,projections");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (ParserConfigurationException e) {
+//                e.printStackTrace();
+//            }
         } catch (LiquibaseException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
