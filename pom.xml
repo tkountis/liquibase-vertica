@@ -6,7 +6,7 @@
 
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-verticaDatabase</artifactId>
-    <version>1.2-1</version>
+    <version>1.2-3</version>
 
     <name>Liquibase Vertica Database Integration</name>
     <description>Liquibase extension for HP's Vertica database</description>
@@ -123,9 +123,10 @@
             <version>3.3.3</version>
         </dependency>
         <dependency>
-            <groupId>com.vertica</groupId>
-            <artifactId>verticaDatabase</artifactId>
-            <version>6.1.2</version>
+            <groupId>vertica</groupId>
+            <artifactId>vertica-jdbc</artifactId>
+            <version>7.1.2-0</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>

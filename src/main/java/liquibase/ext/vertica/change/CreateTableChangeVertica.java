@@ -26,21 +26,14 @@ import java.util.List;
  * Time: 10:55
  * To change this template use File | Settings | File Templates.
  */
-@DatabaseChange(name="createTable", description = "create tables", priority = ChangeMetaData.PRIORITY_DATABASE)
+@DatabaseChange(name="createVerticaTable", description = "create tables",
+                priority = ChangeMetaData.PRIORITY_DATABASE )
 public class CreateTableChangeVertica extends AbstractChange implements ChangeWithColumns<ColumnConfig> {
 
     private String schemaName;
     private String tablespace;
     private String remarks;
     private String tableName;
-    private String projectionName;
-    private String viewName;
-    private String columnAliases;
-    private String objectType;
-    private Boolean reducedPrecision;
-    private Boolean usingIndex;
-    private String tableSpace;
-    private Boolean forUpdate;
     private String orderby;
     private String partitionby;
     private Integer    ksafe;
